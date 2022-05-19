@@ -22,6 +22,7 @@ const DB = process.env.DATABASE_HOST.replace(
   process.env.DATABASE_PASSWORD
 );
 const MongoUrl = process.env.MONGO_URI
+console.log("MongoUrl:", MongoUrl, "username:", process.env.DATABASE_USERNAME, "password:", process.env.DATABASE_PASSWORD)
 mongoose
   .connect(MongoUrl, {
     user: process.env.DATABASE_USERNAME,

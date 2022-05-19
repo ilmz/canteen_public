@@ -11,11 +11,11 @@
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
-    "/seller/auth/getProfile": {
-      "get": {
-        "summary": "getSellerDetail",
+    "/auth/signUp": {
+      "post": {
+        "summary": "signUp",
         "tags": ["Business Seller"],
-        "operationId": "getSellerDetail",
+        "operationId": "signUp",
         "deprecated": false,
         "produces": ["application/json"],
         "parameters": [

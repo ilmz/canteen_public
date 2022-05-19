@@ -9,24 +9,6 @@ const { Success, BadRequest, role, serverError, PAYMENT_STATUS  }  = require('..
 const OrderService  = require('../services/order');
 const { logger } = require('../../logger/logger');
 
-// user,
-//   items: [
-//     {
-     
-//       itemId, 
-//       categoryId,
-//       name: String,
-//       description: String,
-//       price: Number,
-//       quantity: Number,
-      
-//     }
-//   ],
-//   total,
-//   toPay,
-//   cashPaid,
-//   payStatus,
-//   payMethod,
 
 class Order {
     async createOrder(req, res) {
@@ -128,7 +110,6 @@ class Order {
         const language = req.headers.lan;
         try {
             let user =  req.decoded;
-            // console.log("user:", user);
             let orderDetail =  await OrderService.getOrders({user: user._id})
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.ACTION_COMPLETE, language || 'en'), Success.OK, orderDetail )
         } catch (error) {

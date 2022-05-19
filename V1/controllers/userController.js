@@ -40,7 +40,6 @@ class user {
 
             let resultDetails = await commanFunction.createSendToken(result, 201, req, res);
 
-
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, resultDetails)
         } catch (error) {
             logger.error(JSON.stringify({
@@ -50,6 +49,38 @@ class user {
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SOMETHING_WENT_WRONG, language || 'en'), serverError.Internal_Server_error, { error: error.toString() });
         }
     }
+
+    async getUser(req, res) {
+        const language = req.headers.lan;
+        try {
+            const {userId} =  req.query;
+            let User = await UserService.getUserById(userId)
+           
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, User)
+        } catch (error) {
+            logger.error(JSON.stringify({
+                EVENT: "Error",
+                ERROR: error.toString()
+            }));
+        }
+    }
+
+    logout = async (req, res) => {
+        const language = req.headers.lan;
+        try {
+            res.cookie('jwt', 'loggedOut', {
+                expires: new Date(Date.now() + 10 * 1000),
+                httpOnly: false,
+            });
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, {})
+        }
+        catch(error) {
+            logger.error(JSON.stringify({
+                EVENT: "Error",
+                ERROR: error.toString()
+            }));
+        }
+    };
    
 }
 

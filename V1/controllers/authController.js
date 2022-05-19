@@ -31,7 +31,8 @@ exports.signup = async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
-  
+    const language = req.headers.lan;
+
     //1.) Check if email and password exist
     if (!email || !password) {
       return sendCustomResponse(res, getResponseMessage(responseMessageCode.EMAIL_PASSWORD_REQUIRED, language || 'en'), BadRequest.INVALID);
@@ -39,23 +40,25 @@ exports.login = catchAsync(async (req, res, next) => {
     //2.) check if user exist and password is correct
     const user = await User.findOne({ email }).select('+password');
   
-    if (!user || (await user.correctPassword(password, user.password))) {
+    if (!user || (!await user.correctPassword(password, user.password))) {
       return sendCustomResponse(res, getResponseMessage(responseMessageCode.EMAIL_OR_PASSWORD_WROGN, language || 'en'), BadRequest.Unauthorized);
     }
     //3.) if everything ok , then send token to client
     let Result = await commanFunction.createSendToken(user, 200, req, res);
 
-    return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.ACTION_COMPLETE, Result);
+    return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Result);
   });
 
   exports.logout = (req, res) => {
+    const language = req.headers.lan;
     res.cookie('jwt', 'loggedOut', {
       expires: new Date(Date.now() + 10 * 1000),
       httpOnly: false,
     });
-    res.status(200).json({
-      status: 'success',
-    });
+    return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK);
+    // res.status(200).json({
+    //   status: 'success',
+    // });
   };
 
 
@@ -64,6 +67,9 @@ exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     const language = req.headers.lan;
 
+    if(req.decoded){
+      req.body.role = req.decoded.role
+    }
     if (!roles.includes(req.body.role)) {
       return sendCustomResponse(res, getResponseMessage(responseMessageCode.NOT_ALLOWED, language || 'en'), BadRequest.Unauthorized);
       // next(new AppError('you are not authorised to perform this action', 403));

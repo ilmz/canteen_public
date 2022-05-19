@@ -49,6 +49,7 @@ class commanFunction {
       };
 
      static protect = catchAsync(async (req, res, next) => {
+        const { language } = req.headers;
         //1. getting token and check if it's there
         let token;
       

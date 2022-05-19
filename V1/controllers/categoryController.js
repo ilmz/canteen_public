@@ -14,9 +14,11 @@ class category {
     async createCategory(req, res) {
         const language = req.headers.lan;
         try {
-            let category = await categoryService.createCategory(req.body)
+            let {name, quantity } =  req.body
+            let params = {name, quantity}
+            let category = await categoryService.createCategory(params)
           
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.ACTION_COMPLETE, language || 'en'), Success.OK, category);
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, category);
         } catch (error) {
 
             logger.error(JSON.stringify({
@@ -26,13 +28,15 @@ class category {
             // await transaction.rollback();
         }
     }
-    async updateeitem(req, res) {
+    async updateCategory(req, res) {
         const language = req.headers.lan;
-        // const transaction = await sequalize.transaction();
-        const { regioncode } = req.headers;
         try {
-          
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.ACTION_COMPLETE, language || 'en'), Success.OK, feedbackComment);
+            let {name, quantity } =  req.body
+            let params = {name, quantity}
+
+            let category = await categoryService.updateCategory({_id: req.body.categoryId}, params)
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, category);
         } catch (error) {
 
             logger.error(JSON.stringify({
@@ -43,22 +47,25 @@ class category {
         }
     }
 
-    async deleteitem(req, res) {
+    async deleteCategory(req, res) {
         const language = req.headers.lan;
        
         try {
-            const { user_role_id, user_seller_id, user_driver_id, role } = req.decode;
-         
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.THE_FEEDBACK_IS_DELETED, language || 'en'), Success.OK);
+            const { categoryId } = req.body;
+
+            let params = { isDeleted: true }
+
+            let category = await categoryService.updateCategory({ _id: req.body.categoryId }, params)
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, category);
         } catch (error) {
-            console.log(error);
             logger.error(JSON.stringify({
                 EVENT: "Error",
                 ERROR: error.toString()
             }));
         }
     }
-    async getitem(req, res) {
+    async getCategories(req, res) {
         const language = req.headers.lan;
         try {
             let limit = parseInt(req.query.limit) || 10;
@@ -66,7 +73,16 @@ class category {
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
 
-            let allItems = await itemService.getItems()
+            let category = await categoryService.getCategory({isDeleted: false})
+            let categoryCount =  await categoryService.countCategory({limit, offset, isDeleted: false})
+
+            let pages = Math.ceil(categoryCount / limit);
+            if ((pages - page) > 0) {
+                loadMoreFlag = true;
+            }
+            let Rsult = {
+                totalCounts: categoryCount, totalPages: pages, loadMoreFlag: loadMoreFlag, category
+            }
            
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.ACTION_COMPLETE, language || 'en'), Success.OK, Rsult)
         } catch (error) {
@@ -77,11 +93,13 @@ class category {
         }
     }
 
-    async getitemById(req, res) {
+    async getCategoryById(req, res) {
         const language = req.headers.lan;
         try {
-           
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.ACTION_COMPLETE, language || 'en'), Success.OK, feedbackDetail )
+            const { categoryId } = req.body;
+            let category = await categoryService.getCategory({_id: categoryId, isDeleted: false})
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.ACTION_COMPLETE, language || 'en'), Success.OK, category )
         } catch (error) {
             logger.error(JSON.stringify({
                 EVENT: "Error",
