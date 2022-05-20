@@ -16,7 +16,7 @@ class orderValidator {
                 itemId: Joi.string().required().error(new Error("itemId is required")),
                 description: Joi.string().optional(),
                 price: Joi.number().required().error(new Error("price is required")),
-                quantity: Joi.number().required().error(new Error("price is required"))
+                quantity: Joi.number().required().error(new Error("quantity is required"))
 
             }))
 
