@@ -5,13 +5,13 @@
     "title": "inventoryManagement",
     "contact": {}
   },
-  "host": "54.176.169.179",
+  "host": "54.176.169.179:3000",
   "basePath": "/api/v1",
   "schemes": ["http"],
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
-    "users/admin/signUp": {
+    "/users/admin/signUp": {
       "post": {
         "summary": "signUp",
         "tags": ["Admin"],
@@ -58,7 +58,7 @@
         "security": []
       }
     },
-    "users/admin/login": {
+    "/users/admin/login": {
       "post": {
         "summary": "login",
         "tags": ["Admin"],
@@ -91,7 +91,7 @@
         "security": []
       }
     },
-    "users/admin/logout": {
+    "/users/admin/logout": {
       "get": {
         "summary": "logout",
         "tags": ["Admin"],
@@ -116,7 +116,7 @@
         "security": []
       }
     },
-    "users/auth/signUp": {
+    "/users/auth/signUp": {
       "post": {
         "summary": "signUp",
         "tags": ["User"],
@@ -165,7 +165,7 @@
         "security": []
       }
     },
-    "users/auth/logout": {
+    "/users/auth/logout": {
       "get": {
         "summary": "logout",
         "tags": ["User"],
