@@ -111,6 +111,7 @@ class Order {
         try {
             let user =  req.decoded;
             let orderDetail =  await OrderService.getOrders({user: user._id})
+
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.ACTION_COMPLETE, language || 'en'), Success.OK, orderDetail )
         } catch (error) {
             logger.error(JSON.stringify({

@@ -7,5 +7,9 @@ exports.responseMessageCode = {
     SUCCESS                                                                   : "SUCCESS",
     ACCOUNT_CREATED                                                           : "ACCOUNT_CREATED",
     NOT_LOGGED_IN                                                             : "NOT_LOGGED_IN",
-    USER_DOES_NOT_EXIST                                                       : "USER_DOES_NOT_EXIST"
+    USER_DOES_NOT_EXIST                                                       : "USER_DOES_NOT_EXIST",
+    UPLOAD_ERROR                                                              : 'UPLOAD_ERROR',
+    NOT_IMAGE                                                                 : 'NOT_IMAGE',
+    CANT_FIND_URL                                                             : 'CANT_FIND_URL',
+    UPLOAD_SUCCESSFUL                                                         : 'UPLOAD_SUCCESSFUL'
   };

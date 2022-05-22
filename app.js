@@ -17,6 +17,10 @@ const app = express();
 
 const v1 = require('./V1/routes/index');
 
+const {sendCustomResponse} = require('./responses/responses')
+const { responseMessageCode }= require('./responses/messageCodes') ;
+const { getResponseMessage }= require('./language/multilanguageController') ;
+const { Success, BadRequest, role, serverError  }  = require('./constants/constants') ;
 const {logger} = require('./logger/logger')
 
 
@@ -59,6 +63,7 @@ app.use(xss());
 
 app.use(compression());
 
+app.use(express.static(path.join(__dirname, `uploads`)));
 
 /**swagger*/
 const swaggerDocument = require('./swagger/swagger.json');
@@ -68,6 +73,7 @@ app.use("/canteen-doc", swaggerUI.serve, swaggerUI.setup(swaggerDocument, {
     tagsSorter: 'alpha',
     operationsSorter: 'alpha',
   }}));
+
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Credentials", true);
@@ -93,11 +99,11 @@ app.use((req, _, next) => {
 app.use('/api/v1', v1);
 
 /**ERROR HANDLER */
-app.use((req, res, next) => {
-  const error = new Error('Not Found');
-  error.status = 404;
-  next(error);
-})
+// app.use((req, res, next) => {
+//   const error = new Error('Not Found');
+//   error.status = 404;
+//   next(error);
+// })
 app.use((err, _, res, next) => {
   let response = {
     status: err.status || 500,
@@ -108,6 +114,10 @@ app.use((err, _, res, next) => {
   res.status(err.status).json(response);
   logger.error(JSON.stringify({ EVENT: "FINAL RESPONSE", ERROR: response }));
 })
+app.all('*', (req, res, next) => {
+  return sendCustomResponse(res, getResponseMessage(responseMessageCode.CANT_FIND_URL,  'en').replace('<URL>', req.originalUrl ), BadRequest.NotFound);
+  // next(new AppError(`Can't find ${req.originalUrl} url on the server`, 404));
+});
 
 
 

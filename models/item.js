@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator');
 const category =  require('./category')
-const {MENU_ITEM_TYPES} = require('../constants/constants')
+const Attachment =  require('./attachment')
 
 const ItemSchema = new mongoose.Schema({
  
@@ -15,11 +15,10 @@ const ItemSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: category
   },
-  
-  // image: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: SCHEMAS.Attachment
-  // },
+  image: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: Attachment
+  },
   quantity: {
     type: Number,
     required: [true, 'A item must hava a quantity'],
@@ -40,6 +39,9 @@ const ItemSchema = new mongoose.Schema({
 ItemSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'categoryId',
+    select: '-__v -createdAt -updatedAt',
+  }).populate({
+    path: 'image',
     select: '-__v -createdAt -updatedAt',
   });
   next();

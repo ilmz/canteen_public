@@ -6,9 +6,11 @@ const authController = require('../controllers/authController')
 const itemController =  require('../controllers/itemController')
 const itemValidator = require('../validators/itemValidatos')
 const commanFunction =  require('../../utils/commonFunctions')
+const uploadController =  require('../services/fileUploadService')
 
 
 
+router.route('/upload').post(uploadController.uploadUserPhoto, itemController.upload);
 router.route('/create').post(itemValidator.createItem, commanFunction.protect, authController.restrictTo(1), itemController.createItem);
 router.route('/getItem').get(itemValidator.getItem, commanFunction.protect, itemController.getItem);
 router.route('/updateItem').patch(itemValidator.updateItem, commanFunction.protect, authController.restrictTo(1), itemController.updateItem);

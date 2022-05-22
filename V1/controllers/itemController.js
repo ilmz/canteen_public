@@ -1,3 +1,4 @@
+const sizeOf = require('image-size')
 const User = require('../../models/userModel');
 const commanFunction = require('../../utils/commonFunctions')
 const AppError = require('../../utils/appError');
@@ -8,16 +9,22 @@ const { getResponseMessage }= require('../../language/multilanguageController') 
 const { Success, BadRequest, role, serverError  }  = require('../../constants/constants') ;
 const itemService = require('../services/item')
 const { logger } = require('../../logger/logger');
+const { isEmpty, isNull }  = require('underscore');
+const attachmentService = require('../services/attachment')
+
 
 
 class item {
+    
     async createItem(req, res) {
         const language = req.headers.lan;
         
         try {
-            const { name, description, price, quantity, categoryId } = req.body;
+            const { name, description, price, quantity, categoryId, image } = req.body;
 
-            let item = await itemService.createItem(req.body)
+            let params =  { name, description, price, quantity, categoryId, image}
+
+            let item = await itemService.createItem(params)
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
         } catch (error) {
@@ -94,6 +101,7 @@ class item {
         }
     }
 
+
     async getItemById(req, res) {
         const language = req.headers.lan;
         try {
@@ -105,6 +113,58 @@ class item {
                 EVENT: "Error",
                 ERROR: error.toString()
             }));
+        }
+    }
+
+    
+
+    async upload(req, res) {
+        const language = req.headers.lan;
+        console.log("upload:", req.file)
+        try {
+            if (!req.file) {
+                return commanFunction.uploadError(res);
+            }
+       
+            let minetype = req.file.mimetype.split('/')[1].toLowerCase();
+
+            console.log("minetype:", minetype);
+
+           let dimension = sizeOf(req.file.path);
+            console.log("dimension:", dimension);
+
+           let {thumbnail, root} = await commanFunction.compressPhoto(req.file.path, req.file);
+            console.log("thumbnail:", thumbnail);
+
+
+            let imageField = {
+                extension: req.file.mimetype.split('/')[1],
+                image_url: `${root}${req.file.path}`,
+                thumb_url: `${root}${thumbnail}`,
+                size: req.file.size,
+                extension: "minetype",
+                height: isNull(dimension) ? null : dimension.height,
+                width: isNull(dimension) ? null : dimension.width
+            }
+
+            console.log("imageField:", imageField);
+            logger.info(JSON.stringify({ EVENT: "UPLOAD", FILES: req.file, IMAGEFIELDS: imageField }));
+            const image =  await attachmentService.create(imageField)
+            // const image =  await attachmentService.upsert(imageField, imageField)
+
+            // const image = await models.attachment.upsert(imageField, { returning: true, raw: true });
+            let Result = {
+                filename: req.file.filename,
+                size: req.file.size,
+                // type: parseInt(type) ,
+                height: isNull(dimension) ? null : dimension.height,
+                width: isNull(dimension) ? null : dimension.width
+            }
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.UPLOAD_SUCCESSFUL, language || 'en'), Success.OK, Result)
+        } catch (error) {
+            logger.error(JSON.stringify({ EVENT: "Error", ERROR: error.toString(), STACK: error.stack }));
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.UPLOAD_ERROR, language || 'en'), BadRequest.Conflict);
         }
     }
 }

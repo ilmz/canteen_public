@@ -9,6 +9,10 @@ exports.responseMessages = {
     SUCCESS                                                                         : "success",
     ACCOUNT_CREATED                                                                 : "Account Created Successfully",    
     NOT_LOGGED_IN                                                                   : 'You are not logged in! Please log in to get access',
-    USER_DOES_NOT_EXIST                                                             : `the user belonging to the token doesn't exist`
+    USER_DOES_NOT_EXIST                                                             : `the user belonging to the token doesn't exist`,
+    UPLOAD_ERROR                                                                    : 'Error in uploading.',
+    NOT_IMAGE                                                                       : 'Not an image! Please upload images.',
+    CANT_FIND_URL                                                                   : `Can't find <URL> url on the server`,
+    UPLOAD_SUCCESSFUL                                                               : 'file uploaded successfully'
 };  
 

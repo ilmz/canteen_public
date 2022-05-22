@@ -1,11 +1,15 @@
 const jwt = require('jsonwebtoken')
 const {sendCustomResponse} = require('../responses/responses')
 const { responseMessageCode }= require('../responses/messageCodes') ;
-const { getResponseMessage }= require('../language/multilanguageController') ;
+const { getResponseMessage, LANGUAGES }= require('../language/multilanguageController') ;
 const { Success, BadRequest }  = require('../constants/constants') ;
 const { promisify } = require('util');
 const catchAsync = require('../utils/catchAsync');
 const User  = require('../models/userModel');
+const { logger } =  require('../logger/logger')
+const sharp = require('sharp');
+const root =  require('../root')
+
 
 
 class commanFunction {
@@ -42,11 +46,43 @@ class commanFunction {
         //     },
         // });
     };
+    static async getIP(req) {
+        const conRemoteAddress = req.connection.remoteAddress
+        const userAgent = req.headers['user-agent'];
+        return {conRemoteAddress, userAgent}
+    }
+
     static signToken = (id) => {
         return jwt.sign({ id }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRES_IN,
         });
       };
+
+     static uploadError = (res) =>  {
+        let response = {
+          status: Success.Upload_error,
+          message: getResponseMessage(responseMessageCode.UPLOAD_ERROR, LANGUAGES.ENGLISH),
+          data: {}
+        };
+        logger.error(JSON.stringify({ EVENT: "FINAL RESPONSE", RESPONSE: response }));
+        res.send(JSON.stringify(response));
+      }
+
+      static compressPhoto = async  (path, file) => {
+          console.log("root: ", root);
+        // const root = `http://${process.env.NODE_SERVER_HOST} `
+
+        const thumbnail = `/uploads/thumbnail/${file.fieldname}-${Date.now()}.${file.originalname.split('.').pop()}`
+        const s = await sharp(root + "/" + path, { animated: true })
+            .resize({ width: 200, }).toFormat('jpeg', 'png', 'gif', 'jpg')
+            .toFile(root + thumbnail, function (err, res) {
+                if (err) {
+                    console.log("error:", err);
+                    logger.error(JSON.stringify({ EVENT: "THUMBNAIL", ERROR: err }))
+                }
+            })
+        return {thumbnail, root}
+    }
 
      static protect = catchAsync(async (req, res, next) => {
         const { language } = req.headers;

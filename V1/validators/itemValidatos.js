@@ -9,7 +9,7 @@ class itemValidations {
         req.body.token = req.headers.authorization;
         req.body.limit      = req.query.limit;
         req.body.page       = req.query.page;
-        
+
 		let schema = Joi.object().keys({
             token: Joi.string().required().error(new Error("authToken is required")),
             page: Joi.number().optional().default(1),
@@ -32,7 +32,8 @@ class itemValidations {
             description     :          Joi.string().optional(),
             price           :          Joi.number().required().error(new Error("price is required")),
             quantity        :          Joi.number().required().error(new Error("quantity is required")), 
-            categoryId      :          Joi.string().required().error(new Error("categoryId is required")) 
+            categoryId      :          Joi.string().required().error(new Error("categoryId is required")),
+            image           :          Joi.string().optional().error(new Error("image is required")) 
 		})
 
 		const { value, error } = schema.validate(req.body)
