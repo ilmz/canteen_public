@@ -8,7 +8,7 @@ const catchAsync = require('../utils/catchAsync');
 const User  = require('../models/userModel');
 const { logger } =  require('../logger/logger')
 const sharp = require('sharp');
-// const root =  require('../root')
+const root =  require('../root')
 
 
 
@@ -70,7 +70,7 @@ class commanFunction {
 
       static compressPhoto = async  (path, file) => {
           console.log("root: ", root);
-        const root = `http://${process.env.NODE_SERVER_HOST} `
+        // const root = `http://${process.env.NODE_SERVER_HOST} `
 
         const thumbnail = `/uploads/thumbnail/${file.fieldname}-${Date.now()}.${file.originalname.split('.').pop()}`
         const s = await sharp(root + "/" + path, { animated: true })
