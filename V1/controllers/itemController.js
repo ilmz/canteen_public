@@ -142,7 +142,6 @@ class item {
                 image_url: `/${req.file.path}`,
                 thumb_url: thumbnail,
                 size: req.file.size,
-                extension: "minetype",
                 height: isNull(dimension) ? null : dimension.height,
                 width: isNull(dimension) ? null : dimension.width
             }
@@ -150,12 +149,19 @@ class item {
             console.log("imageField:", imageField);
             logger.info(JSON.stringify({ EVENT: "UPLOAD", FILES: req.file, IMAGEFIELDS: imageField }));
             const image =  await attachmentService.create(imageField)
+            console.log("image:", image);
+
             // const image =  await attachmentService.upsert(imageField, imageField)
 
             // const image = await models.attachment.upsert(imageField, { returning: true, raw: true });
             let Result = {
                 filename: req.file.filename,
+                baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`,
                 size: req.file.size,
+                extension: req.file.mimetype.split('/')[1],
+                image_url: `/${req.file.path}`,
+                thumb_url: thumbnail,
+                id: image._id,
                 // type: parseInt(type) ,
                 height: isNull(dimension) ? null : dimension.height,
                 width: isNull(dimension) ? null : dimension.width

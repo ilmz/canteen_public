@@ -110,6 +110,7 @@ class Order {
         const language = req.headers.lan;
         try {
             let user =  req.decoded;
+            
             let orderDetail =  await OrderService.getOrders({user: user._id})
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, orderDetail )
