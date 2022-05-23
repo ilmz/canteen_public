@@ -120,7 +120,7 @@ class item {
 
     async upload(req, res) {
         const language = req.headers.lan;
-        console.log("upload:", req.file)
+        // console.log("upload:", req.file)
         try {
             if (!req.file) {
                 return commanFunction.uploadError(res);
@@ -128,13 +128,13 @@ class item {
        
             let minetype = req.file.mimetype.split('/')[1].toLowerCase();
 
-            console.log("minetype:", minetype);
+            // console.log("minetype:", minetype);
 
            let dimension = sizeOf(req.file.path);
-            console.log("dimension:", dimension);
+            // console.log("dimension:", dimension);
 
            let {thumbnail, root} = await commanFunction.compressPhoto(req.file.path, req.file);
-            console.log("thumbnail:", thumbnail);
+            // console.log("thumbnail:", thumbnail);
 
 
             let imageField = {
@@ -146,10 +146,10 @@ class item {
                 width: isNull(dimension) ? null : dimension.width
             }
 
-            console.log("imageField:", imageField);
+            // console.log("imageField:", imageField);
             logger.info(JSON.stringify({ EVENT: "UPLOAD", FILES: req.file, IMAGEFIELDS: imageField }));
             const image =  await attachmentService.create(imageField)
-            console.log("image:", image);
+            // console.log("image:", image);
 
             // const image =  await attachmentService.upsert(imageField, imageField)
 

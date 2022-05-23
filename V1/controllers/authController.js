@@ -12,7 +12,7 @@ const UserService  = require('../services/user');
 
 exports.signup = async (req, res, next) => {
   const {language, devicetype } = req.headers;
-  const { name, email, password, passwordConfirm } = req.body
+  const { name, email, password, passwordConfirm, registerToken } = req.body
   try {
     let isExist = await AdminService.getAdminByEmail(email)
 
