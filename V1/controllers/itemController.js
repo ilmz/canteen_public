@@ -139,8 +139,8 @@ class item {
 
             let imageField = {
                 extension: req.file.mimetype.split('/')[1],
-                image_url: `${root}${req.file.path}`,
-                thumb_url: `${root}${thumbnail}`,
+                image_url: req.file.path,
+                thumb_url: thumbnail,
                 size: req.file.size,
                 extension: "minetype",
                 height: isNull(dimension) ? null : dimension.height,
