@@ -63,7 +63,7 @@ app.use(xss());
 
 app.use(compression());
 
-app.use(express.static(path.join(__dirname, `uploads`)));
+app.use("/uploads", express.static(path.join(__dirname, `uploads`)));
 
 /**swagger*/
 const swaggerDocument = require('./swagger/swagger.json');
