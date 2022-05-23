@@ -10,9 +10,9 @@ const userSessionsSchema = new Schema({
   ip: {
     type: String,
   },
-  country: {
-    type: String,
-  },
+//   country: {
+//     type: String,
+//   },
   userAgent: {
     type: String,
   },
@@ -29,6 +29,14 @@ const userSessionsSchema = new Schema({
   },
   logoutTime: {
     type: Date,
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
   }
 });
 

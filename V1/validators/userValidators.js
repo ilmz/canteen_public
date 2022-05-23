@@ -12,7 +12,8 @@ class userAuthValidation {
 			socialType				    : Joi.string().optional(),
 			social_login_id				: Joi.string().optional(),
             password                    : Joi.string().optional(),
-            passwordConfirm             : Joi.string().optional()   
+            passwordConfirm             : Joi.string().optional(),
+            registerToken               : Joi.string().required()
 		})
 
 		const { value, error } = schema.validate(req.body)

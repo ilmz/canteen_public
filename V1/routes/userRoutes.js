@@ -11,7 +11,7 @@ const commanFunction =  require('../../utils/commonFunctions')
 const adminValidator =  require('../validators/adminValidators')
 
 router.route('/auth/signUp').post(authUserValidator.signUp, userController.signUp);
-router.route('/auth/logout').get(authUserValidator.logout, userController.logout);
+router.route('/auth/logout').get(authUserValidator.logout, commanFunction.protect,  userController.logout);
 
 
 router.route('/admin/login').post(adminValidator.login, authController.login);

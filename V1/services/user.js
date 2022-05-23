@@ -1,5 +1,6 @@
 const User  = require('../../models/userModel');
-const constants = require('../../constants/constants')
+const constants = require('../../constants/constants');
+const UserSession = require('../../models/userSession');
 
 
 /**
@@ -13,7 +14,20 @@ class UserService {
   getUserById = (_id) => User.findOne({ _id, roles: { $in: [constants.role.user] } });
   getUserBySocialLogin = (social_login_id) => User.findOne({ social_login_id, roles: { $in: [constants.role.user] } });
 
-  // get all admins
+  
+
+  //UserSession
+  findUserSession  = (params) => UserSession.find(params)
+  findOneUserSession  = (registerToken) => UserSession.findOne({registerToken, isDeleted: false})
+  createSession = (params) => UserSession.create(params)
+
+  updateUsersession = (expiredSessionIds) => UserSession.updateMany({ _id: { $in: expiredSessionIds } }, {
+    $set: { isDeleted: true }
+  })
+  // await UserSessionModel.updateMany({ _id: { $in: expiredSessionIds } }, {
+  //   $set: { logoutTime: new Date() }
+  // });
+
  
 
   /**
@@ -25,7 +39,7 @@ class UserService {
   }
 
   //user logout
-  logout = async (DB, id, sessionId) => {
+  logout = async ( id, sessionId) => {
     try {
       await UserSessionModel.updateOne({ "_id": sessionId, "user": id }, {
         $set: {

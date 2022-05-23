@@ -10,14 +10,15 @@ const { getResponseMessage }= require('../../language/multilanguageController') 
 const { Success, BadRequest, role, serverError  }  = require('../../constants/constants') ;
 const UserService  = require('../services/user');
 const { logger } = require('../../logger/logger');
+const { isNull } = require('underscore');
 
 class user {
     
     async signUp(req, res) {
-        const { language, deviceType } = req.headers;
+        const { language, devicetype } = req.headers;
         try {
 
-            let { name, email, socialType, social_login_id } = req.body;
+            let { name, email, socialType, social_login_id, registerToken } = req.body;
             const roles = role.user;
             const body = {};
             let result;
@@ -30,22 +31,41 @@ class user {
             const appleId = body.appleId || null;
             const googleId = body.googleId || null;
 
-            const {ip, userAgent}  = await commanFunction.getIP(req);
+            const {conRemoteAddress, userAgent}  = await commanFunction.getIP(req);
+            console.log("ip:", conRemoteAddress);
+
 
             let Exist = await UserService.getUserBySocialLogin(social_login_id)
+
             if (Exist) {
                 result = Exist
-            }
+                // console.log("result:", result);
 
+            }
             else if(!Exist){
                 result = await UserService.createUser({ name, email, isSocial: 1, social_type: socialType, social_login_id, role: roles })
+                console.log("result:", result);
                 // await UserSessionService 
 
             }
-            let resultDetails = await commanFunction.createSendToken(result, 201, req, res);
+
+             // Check if any sessions exist with this registration token
+            const expiredSessions =  await UserService.findUserSession({ registerToken, isDeleted: false })
+
+            // expired sessions
+            if (expiredSessions.length) {
+              const expiredSessionIds = expiredSessions.map((expiredSession) => expiredSession._id);
+              await UserService.updateUsersession(expiredSessionIds)
+              
+            }
+            let session = {ip: conRemoteAddress, userAgent, deviceType: devicetype, registerToken}
+            await UserService.createSession(session)
+
+            let resultDetails = await commanFunction.createSendToken(result, 201, req, res, session);
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, resultDetails)
         } catch (error) {
+            console.log("error:", error)
             logger.error(JSON.stringify({
                 EVENT: "Error",
                 ERROR: error.toString()
@@ -76,9 +96,13 @@ class user {
                 expires: new Date(Date.now() + 10 * 1000),
                 httpOnly: false,
             });
+            let user =  req.decoded;
+            console.log("user:", user);
+            await UserService.updateUsersession(user.sessionDetails._id)
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, {})
         }
         catch(error) {
+            console.log("error:", error)
             logger.error(JSON.stringify({
                 EVENT: "Error",
                 ERROR: error.toString()

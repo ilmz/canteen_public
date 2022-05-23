@@ -5,8 +5,10 @@ const { getResponseMessage, LANGUAGES }= require('../language/multilanguageContr
 const { Success, BadRequest }  = require('../constants/constants') ;
 const { promisify } = require('util');
 const catchAsync = require('../utils/catchAsync');
+const UserService  = require('../V1/services/user');
 const User  = require('../models/userModel');
 const { logger } =  require('../logger/logger')
+const { isNull, isEmpty } = require('underscore');
 const sharp = require('sharp');
 const root =  require('../root')
 
@@ -20,8 +22,8 @@ class commanFunction {
         return await `${jwt.sign(payload, config.ACCESS_TOKEN_SECRET, { expiresIn: EXPIRE_IN })}`;
     }
 
-    static createSendToken = (user, statusCode, req, res) => {
-        const token = this.signToken(user._id);
+    static createSendToken = (user, statusCode, req, res, session ) => {
+        const token = this.signToken(user, session);
 
         res.cookie('jwt', token, {
             expires: new Date(
@@ -31,7 +33,10 @@ class commanFunction {
         });
 
         //Remove the password from the output
-        user.password = undefined;
+        if(user.password){
+            user.password = undefined;
+
+        }
 
         let Result = {token,  data: {
             user,
@@ -47,13 +52,14 @@ class commanFunction {
         // });
     };
     static async getIP(req) {
-        const conRemoteAddress = req.connection.remoteAddress
+        const conRemoteAddress = req.connection.remoteAddress || req.headers['x-forwarded-for']
+        console.log("req.connection.remoteAddress:", req.connection.remoteAddress);
         const userAgent = req.headers['user-agent'];
         return {conRemoteAddress, userAgent}
     }
 
-    static signToken = (id) => {
-        return jwt.sign({ id }, process.env.JWT_SECRET, {
+    static signToken = (user, session) => {
+        return jwt.sign({ user, sesionId: session }, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRES_IN,
         });
       };
@@ -105,21 +111,30 @@ class commanFunction {
       
         //2. Verification token
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-      
-        //3. check if user stil exist
-        const currentUser = await User.findById(decoded.id);
-        if (!currentUser) {
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.USER_DOES_NOT_EXIST, language || 'en'), BadRequest.Unauthorized)
+
+          //3. check if user stil exist
+        
+          const currentUser = await User.findById(decoded.user._id).lean(true);
+          if (!currentUser) {
+              return sendCustomResponse(res, getResponseMessage(responseMessageCode.USER_DOES_NOT_EXIST, language || 'en'), BadRequest.Unauthorized)
+          }
+
+
+        if (decoded.user._id && decoded.sesionId) {
+            let sessionDetails = await UserService.findOneUserSession(decoded.sesionId.registerToken)
+          
+            if (isEmpty(sessionDetails))
+                return sendCustomResponse(res, getResponseMessage(responseMessageCode.SESSION_EXPIRED,  'en'), BadRequest.Unauthorized)
+                // throw new Error("session expired. Please logout and login again");
+            else{
+                currentUser.sessionDetails = sessionDetails
+            }
         }
+          // GRANT ACCESS TO PROTECTED ROUTE
+        //   console.log("decoded:", decoded);
+        //   console.log("currentUser:", currentUser);
+          req.decoded = currentUser;
       
-        //4. check if user changed password after the token was issued
-        // if (currentUser.changedPasswordAfter(decoded.iat)) {
-        //   return next(
-        //     new AppError('User recently changed password| Please log in again', 401)
-        //   );
-        // }
-        // GRANT ACCESS TO PROTECTED ROUTE
-        req.decoded = currentUser;
         next();
       });
 }

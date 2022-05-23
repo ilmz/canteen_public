@@ -13,6 +13,7 @@ exports.responseMessages = {
     UPLOAD_ERROR                                                                    : 'Error in uploading.',
     NOT_IMAGE                                                                       : 'Not an image! Please upload images.',
     CANT_FIND_URL                                                                   : `Can't find <URL> url on the server`,
-    UPLOAD_SUCCESSFUL                                                               : 'file uploaded successfully'
+    UPLOAD_SUCCESSFUL                                                               : 'file uploaded successfully',
+    SESSION_EXPIRED                                                                 : 'session expired. Please logout and login again'
 };  
 

@@ -8,18 +8,36 @@ const { getResponseMessage }= require('../../language/multilanguageController') 
 const { Success, BadRequest }  = require('../../constants/constants') ;
 const AdminService  = require('../services/admin');
 const { logger } = require('../../logger/logger');
+const UserService  = require('../services/user');
 
 exports.signup = async (req, res, next) => {
-  const language = req.headers.lan;
+  const {language, devicetype } = req.headers;
   const { name, email, password, passwordConfirm } = req.body
   try {
     let isExist = await AdminService.getAdminByEmail(email)
+
+    const { conRemoteAddress, userAgent } = await commanFunction.getIP(req);
+
     if (isExist) {
       return sendCustomResponse(res, getResponseMessage(responseMessageCode.EMAIL_EXIST, language || 'en'), Success.ACTION_COMPLETE);
+
     }
+
+    // Check if any sessions exist with this registration token
+    const expiredSessions = await UserService.findUserSession({ registerToken, isDeleted: false })
+
+    // expired sessions
+    if (expiredSessions.length) {
+      const expiredSessionIds = expiredSessions.map((expiredSession) => expiredSession._id);
+      await UserService.updateUsersession(expiredSessionIds)
+
+    }
+    let session = { ip: conRemoteAddress, userAgent, deviceType: devicetype, registerToken }
+    await UserService.createSession(session)
+
     const newUser = await AdminService.createAdmin({ name, email, password, passwordConfirm });
-    
-   let Result =  await commanFunction.createSendToken(newUser, 201, req, res);
+
+    let Result = await commanFunction.createSendToken(newUser, 201, req, res, session);
 
     return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.CREATED, Result);
 
@@ -31,7 +49,9 @@ exports.signup = async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
-    const language = req.headers.lan;
+    const {language, devicetype }  = req.headers;
+
+    const { conRemoteAddress, userAgent } = await commanFunction.getIP(req);
 
     //1.) Check if email and password exist
     if (!email || !password) {
@@ -43,19 +63,36 @@ exports.login = catchAsync(async (req, res, next) => {
     if (!user || (!await user.correctPassword(password, user.password))) {
       return sendCustomResponse(res, getResponseMessage(responseMessageCode.EMAIL_OR_PASSWORD_WROGN, language || 'en'), BadRequest.Unauthorized);
     }
+
+    // Check if any sessions exist with this registration token
+    const expiredSessions = await UserService.findUserSession({ registerToken, isDeleted: false })
+
+    // expired sessions
+    if (expiredSessions.length) {
+      const expiredSessionIds = expiredSessions.map((expiredSession) => expiredSession._id);
+      await UserService.updateUsersession(expiredSessionIds)
+
+    }
+    let session = { ip: conRemoteAddress, userAgent,deviceType: devicetype, registerToken }
+    await UserService.createSession(session)
+
     //3.) if everything ok , then send token to client
-    let Result = await commanFunction.createSendToken(user, 200, req, res);
+    let Result = await commanFunction.createSendToken(user, 200, req, res, session);
 
     return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Result);
   });
 
-  exports.logout = (req, res) => {
-    const language = req.headers.lan;
+  exports.logout = async (req, res) => {
     res.cookie('jwt', 'loggedOut', {
       expires: new Date(Date.now() + 10 * 1000),
-      httpOnly: false,
+      httpOnly: true,
     });
-    return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK);
+
+    let user =  req.decoded;
+    console.log("user:", user);
+    await UserService.updateUsersession(user.sessionDetails._id)
+
+    return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, 'en'), Success.OK);
     // res.status(200).json({
     //   status: 'success',
     // });

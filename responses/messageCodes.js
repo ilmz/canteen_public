@@ -11,5 +11,6 @@ exports.responseMessageCode = {
     UPLOAD_ERROR                                                              : 'UPLOAD_ERROR',
     NOT_IMAGE                                                                 : 'NOT_IMAGE',
     CANT_FIND_URL                                                             : 'CANT_FIND_URL',
-    UPLOAD_SUCCESSFUL                                                         : 'UPLOAD_SUCCESSFUL'
+    UPLOAD_SUCCESSFUL                                                         : 'UPLOAD_SUCCESSFUL',
+    SESSION_EXPIRED                                                           : 'SESSION_EXPIRED'
   };
