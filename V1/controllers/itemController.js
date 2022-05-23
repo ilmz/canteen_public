@@ -89,7 +89,7 @@ class item {
                 loadMoreFlag = true;
             }
             let Rsult = {
-                totalCounts: itemCount, totalPages: pages, loadMoreFlag: loadMoreFlag, allItems
+                totalCounts: itemCount, totalPages: pages, loadMoreFlag: loadMoreFlag, baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, allItems
             }
            
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Rsult)
@@ -139,7 +139,7 @@ class item {
 
             let imageField = {
                 extension: req.file.mimetype.split('/')[1],
-                image_url: req.file.path,
+                image_url: `/${req.file.path}`,
                 thumb_url: thumbnail,
                 size: req.file.size,
                 extension: "minetype",
