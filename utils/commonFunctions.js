@@ -71,6 +71,7 @@ class commanFunction {
       static compressPhoto = async  (path, file) => {
           console.log("root: ", root);
         // const root = `http://${process.env.NODE_SERVER_HOST} `
+        
 
         const thumbnail = `/uploads/thumbnail/${file.fieldname}-${Date.now()}.${file.originalname.split('.').pop()}`
         const s = await sharp(root + "/" + path, { animated: true })
