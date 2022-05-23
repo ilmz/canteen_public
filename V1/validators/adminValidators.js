@@ -9,6 +9,7 @@ class adminValidator {
         let schema = Joi.object().keys({
             email           : Joi.string().required().error(new Error("email is required")),
             password        : Joi.string().required().error(new Error("Password is required")),
+            registerToken   : Joi.string().required()
         });
 
         const { value, error } = schema.validate(req.body)
