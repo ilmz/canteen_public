@@ -16,5 +16,6 @@ router.route('/getItem').get(itemValidator.getItem, commanFunction.protect, item
 router.route('/updateItem').patch(itemValidator.updateItem, commanFunction.protect, authController.restrictTo(1), itemController.updateItem);
 router.route('/deleteItem').delete(itemValidator.deleteItem, commanFunction.protect, authController.restrictTo(1), itemController.deleteItem);
 router.route('/getItemById').get(itemValidator.getItemById, commanFunction.protect, itemController.getItemById);
+router.route('/itemEnableDisable').patch(itemValidator.itemEnableDisable, commanFunction.protect,  authController.restrictTo(1), itemController.itemEnableDisable);
 
 module.exports = router;

@@ -7,7 +7,9 @@ const { responseMessageCode }= require('../../responses/messageCodes') ;
 const { getResponseMessage }= require('../../language/multilanguageController') ;
 const { Success, BadRequest, role, serverError, PAYMENT_STATUS  }  = require('../../constants/constants') ;
 const OrderService  = require('../services/order');
+const UserService  = require('../services/user');
 const { logger } = require('../../logger/logger');
+const { isNull, isEmpty } = require('underscore');
 
 
 class Order {
@@ -16,10 +18,16 @@ class Order {
         try {
             const user = req.decoded;
             const { items } = req.body
+            let userAmount = null;
             let sum = 0
+            userAmount =  await UserService.getUserAmount(user._id);
+            console.log("userAmount:", userAmount);
+            if(userAmount.walletAmount > 0)
             for(let item of items){
-               sum  +=  (item.quantity * item.price)
+               sum  +=  (item.quantity * item.price);
+               userAmount.Amount += sum
             }
+            await UserService.updateUserAmount(user._id, userAmount.Amount)
             let toPay =  sum
             let UserOrder = await OrderService.createOrder({items, user, toPay, payStatus: PAYMENT_STATUS.PENDING})
 
@@ -111,6 +119,33 @@ class Order {
         try {
             let user =  req.decoded;
             
+            let orderDetail =  await OrderService.getOrders({user: user._id})
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, orderDetail )
+        } catch (error) {
+            logger.error(JSON.stringify({
+                EVENT: "Error",
+                ERROR: error.toString()
+            }));
+        }
+    }
+    async amountCalculations(req, res) {
+        const language = req.headers.lan;
+        try {
+            // let 
+            let user =  req.decoded;
+
+            let {amountPaid, userId} =  req.body
+            let userAmount =  await UserService.getUserAmount(userId);
+
+            let AmountRemaining = userAmount.Amount - amountPaid
+            if(AmountRemaining < 0){
+                walletAmount = userAmount.walletAmount + Math.abs(AmountRemaining);
+                await UserService.updateUserWallet(user._id, walletAmount)
+            }else{
+                await UserService.updateUserAmount(user._id, AmountRemaining)
+            }
+
             let orderDetail =  await OrderService.getOrders({user: user._id})
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, orderDetail )

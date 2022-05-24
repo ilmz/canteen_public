@@ -40,14 +40,22 @@ class item {
         const language = req.headers.lan;
 
         try {
-            const { name, description, price, quantity, categoryId } = req.body;
-            const params = { name, description, price, quantity, categoryId }
+            const { name, description, price, quantity, categoryId, image, itemId } = req.body;
+            const params = { name, description, price, quantity, categoryId, image }
+
+            if(image){
+                let ItemDetail = await itemService.getItem({_id:itemId,  isDeleted: false, isActive: true })
+                // console.log("ItemDetail:", ItemDetail);
+                if(ItemDetail && ItemDetail.image && image != ItemDetail.image._id){
+                    let imageDelete =  await attachmentService.deleteImage(ItemDetail.image._id)
+                }
+            }
 
             let item = await itemService.updateItem({_id: req.body.itemId }, params)
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
         } catch (error) {
-
+            console.log("errror", error);
             logger.error(JSON.stringify({
                 EVENT: "Error",
                 ERROR: error.toString()
@@ -82,7 +90,7 @@ class item {
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
 
-            let allItems = await itemService.getItems({isDeleted: false})
+            let allItems = await itemService.getItems({isDeleted: false, isActive: true})
             let itemCount =  await itemService.countItems({limit, offset, isDeleted: false})
             let pages = Math.ceil(itemCount / limit);
             if ((pages - page) > 0) {
@@ -106,7 +114,7 @@ class item {
         const language = req.headers.lan;
         try {
             const { itemId } = req.query;
-            let ItemDetail = await itemService.getItems({_id:itemId,  isDeleted: false})
+            let ItemDetail = await itemService.getItems({_id:itemId,  isDeleted: false, isActive: true})
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, ItemDetail )
         } catch (error) {
             logger.error(JSON.stringify({
@@ -116,6 +124,28 @@ class item {
         }
     }
 
+    async itemEnableDisable(req, res) {
+        const language = req.headers.lan;
+        try {
+            const user = req.decoded;
+            let { isActive, itemId } = req.body;
+            let item =  null;
+            if (isActive) {
+                 item = await itemService.updateItem({_id: itemId }, { isActive: 1})
+               
+            }
+            else {
+                item = await itemService.updateItem({_id: itemId }, { isActive: 0})
+            }
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
+        } catch (error) {
+            logger.error(JSON.stringify({
+                EVENT: "Error",
+                ERROR: error.toString()
+            }));
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.NOT_UPDATED, language || 'en'), BadRequest.INVALID, { error: error.toString() });
+        }
+    }
     
 
     async upload(req, res) {

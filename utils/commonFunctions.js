@@ -112,7 +112,7 @@ class commanFunction {
         //2. Verification token
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-        console.log("decoded:", decoded);
+        // console.log("decoded:", decoded);
 
           //3. check if user stil exist
         

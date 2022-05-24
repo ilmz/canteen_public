@@ -4,6 +4,7 @@ class attachmentService {
 
     upsert = (match, params) => Attachment.findOneAndUpdate(match, { $set: params }, { new: true }, {upsert: true});
     create = (params) => Attachment.create(params);
+    deleteImage =  (imageId) => Attachment.deleteOne({ _id: imageId})
 
     
 }

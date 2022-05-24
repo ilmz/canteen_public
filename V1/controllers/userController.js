@@ -18,7 +18,7 @@ class user {
         const { language, devicetype } = req.headers;
         try {
 
-            let { name, email, socialType, social_login_id, registerToken } = req.body;
+            let { name, email, socialType, social_login_id, registerToken, profileId } = req.body;
             const roles = role.user;
             const body = {};
             let result;
@@ -43,7 +43,7 @@ class user {
 
             }
             else if(!Exist){
-                result = await UserService.createUser({ name, email, isSocial: 1, social_type: socialType, social_login_id, role: roles })
+                result = await UserService.createUser({ name, email, isSocial: 1, social_type: socialType, social_login_id, role: roles, priflePic: profileId })
                 console.log("result:", result);
                 // await UserSessionService 
 
@@ -109,6 +109,22 @@ class user {
             }));
         }
     };
+
+    userListing = async (req, res) => {
+        try {
+
+            let Users = await UserService.getUsers()
+            // let Rsult = {
+            //     Users
+            // }
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, 'en'), Success.OK,  Users)
+        } catch (error) {
+            console.log("error", error);
+            logger.error(JSON.stringify({EVENT: "Error", ERROR: error.toString() }))
+            
+        }
+    }
    
 }
 

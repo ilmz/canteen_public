@@ -1,7 +1,11 @@
-const Joi  =  require('joi');
+const Joi =  require('joi');
 const {sendCustomResponse} = require('../../responses/responses')
 const { Success, BadRequest }  = require('../../constants/constants') ;
 const {logger} =  require('../../logger/logger')
+// const JoiEmailExtensions = require('joi-email-extensions')
+
+// Joi = Joi.extend([JoiEmailExtensions])
+
 
 class userAuthValidation {
 
@@ -14,7 +18,8 @@ class userAuthValidation {
             password                    : Joi.string().optional(),
             passwordConfirm             : Joi.string().optional(),
             registerToken               : Joi.string().required(),
-            role                        : Joi.number().optional()
+            role                        : Joi.number().optional(),
+            profileId                   : Joi.string().optional()
 		})
 
 		const { value, error } = schema.validate(req.body)
@@ -28,6 +33,21 @@ class userAuthValidation {
     static async logout(req, res, next) {
 		let schema = Joi.object().keys({
 		
+		})
+
+		const { value, error } = schema.validate(req.body)
+		if (error) {
+			logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
+			return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
+		}
+		if (value)
+			next()
+	}
+    static async userListing(req, res, next) {
+        req.body.token = req.headers.authorization;
+
+		let schema = Joi.object().keys({
+            token: Joi.string().required().error(new Error("authToken is required")),
 		})
 
 		const { value, error } = schema.validate(req.body)

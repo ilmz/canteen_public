@@ -14,6 +14,7 @@ exports.responseMessages = {
     NOT_IMAGE                                                                       : 'Not an image! Please upload images.',
     CANT_FIND_URL                                                                   : `Can't find <URL> url on the server`,
     UPLOAD_SUCCESSFUL                                                               : 'file uploaded successfully',
-    SESSION_EXPIRED                                                                 : 'session expired. Please logout and login again'
+    SESSION_EXPIRED                                                                 : 'session expired. Please logout and login again',
+    NOT_UPDATED                                                                     : 'the item status is not updated'
 };  
 

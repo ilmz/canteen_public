@@ -17,10 +17,12 @@ router.route('/auth/logout').get(authUserValidator.logout, commanFunction.protec
 router.route('/admin/login').post(adminValidator.login, authController.login);
 router.route('/admin/logout').get(adminValidator.logout, commanFunction.protect, authController.logout);
 
+router.route(`/admin/userlisting`).get(authUserValidator.userListing, commanFunction.protect, authController.restrictTo(1), userController.userListing);
 
 router.use(authController.restrictTo(1));
 
 router.route(`/admin/signup`).post(authUserValidator.signUp, authController.signup);
+
 
 // router.route('/login').post(adminValidator.login, authController.login);
 

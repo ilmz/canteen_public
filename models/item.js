@@ -17,7 +17,8 @@ const ItemSchema = new mongoose.Schema({
   },
   image: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: Attachment
+    ref: Attachment,
+    default: null
   },
   quantity: {
     type: Number,

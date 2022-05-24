@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator');
+const Attachment =  require('./attachment')
 // import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 const {genSaltSync, hashSync, compareSync, hash, compare }  = require('bcrypt')
 
@@ -29,12 +30,22 @@ const userSchema = new mongoose.Schema({
   },
   Amount: {
     type: Number,
-    required: [false, 'user item must have a price.']
+    required: [false, 'user item must have a price.'],
+    default: 0.00
+  },
+  walletAmount: {
+    type: Number,
+    default: 0.00
   },
   status: {
     type: Boolean,
     default: true,
     select: false,
+  },
+  priflePic: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: Attachment,
+    default: null
   },
   password: {
     type: String,
@@ -55,7 +66,7 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   role: {
     type: Number,
-    default: 1,
+    default: 0,
   },
   passwordResetToken: String,
   passwordResetExpires: Date,
@@ -72,6 +83,15 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
  } 
 );
+
+userSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'priflePic',
+    select: '-__v -createdAt -updatedAt',
+  });
+  next();
+});
+
 
 userSchema.pre('save', async function (next) {
   //Only run this function if password is modified
