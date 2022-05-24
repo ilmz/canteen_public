@@ -13,6 +13,7 @@ router.route('/place').post(orderValidator.createOrder, commanFunction.protect, 
 router.route('/list').get(orderValidator.getOrder, commanFunction.protect, authController.restrictTo(1), OrderConrtoller.getOrder);
 router.route('/byId').get(orderValidator.getOrderById, commanFunction.protect, OrderConrtoller.getOrderById);
 router.route('/userOrder').get(orderValidator.getOrderHistory, commanFunction.protect, OrderConrtoller.getOrderHistory);
+router.route('/amountCalculations').patch(orderValidator.amountCalculations, commanFunction.protect, authController.restrictTo(1), OrderConrtoller.amountCalculations);
 // router.route('/getitem').get(itemController.getitem);
 
 

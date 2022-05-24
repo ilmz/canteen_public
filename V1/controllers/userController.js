@@ -77,8 +77,9 @@ class user {
     async getUser(req, res) {
         const language = req.headers.lan;
         try {
-            const {userId} =  req.query;
-            let User = await UserService.getUserById(userId)
+            // const {userId} =  req.query;
+            let user = req.decoded
+            let User = await UserService.getUserById(user._id)
            
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, User)
         } catch (error) {
@@ -125,6 +126,21 @@ class user {
             
         }
     }
+    // getUser = async (req, res) => {
+    //     try {
+    //         let user = req.decoded
+    //         let Users = await UserService.getUsers(user._id)
+    //         // let Rsult = {
+    //         //     Users
+    //         // }
+
+    //         return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, 'en'), Success.OK,  Users)
+    //     } catch (error) {
+    //         console.log("error", error);
+    //         logger.error(JSON.stringify({EVENT: "Error", ERROR: error.toString() }))
+            
+    //     }
+    // }
    
 }
 

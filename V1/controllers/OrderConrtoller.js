@@ -18,17 +18,22 @@ class Order {
         try {
             const user = req.decoded;
             const { items } = req.body
-            let userAmount = null;
+            let userAmount = 0;
             let sum = 0
             userAmount =  await UserService.getUserAmount(user._id);
             console.log("userAmount:", userAmount);
-            if(userAmount.walletAmount > 0)
+           
             for(let item of items){
                sum  +=  (item.quantity * item.price);
-               userAmount.Amount += sum
+             
             }
-            await UserService.updateUserAmount(user._id, userAmount.Amount)
             let toPay =  sum
+            userAmount.Amount += toPay
+            console.log(" userAmount.Amount:",  userAmount.Amount);
+
+           let amountUpdated =  await UserService.updateUserAmount(user._id, userAmount.Amount)
+           console.log("amountUpdated:", amountUpdated);
+            
             let UserOrder = await OrderService.createOrder({items, user, toPay, payStatus: PAYMENT_STATUS.PENDING})
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, UserOrder);
@@ -134,21 +139,48 @@ class Order {
         try {
             // let 
             let user =  req.decoded;
-
+            let AmountRemaining = 0;
+            let walletAmount = 0
             let {amountPaid, userId} =  req.body
             let userAmount =  await UserService.getUserAmount(userId);
+            console.log("userAmount:", userAmount);
 
-            let AmountRemaining = userAmount.Amount - amountPaid
-            if(AmountRemaining < 0){
-                walletAmount = userAmount.walletAmount + Math.abs(AmountRemaining);
-                await UserService.updateUserWallet(user._id, walletAmount)
-            }else{
-                await UserService.updateUserAmount(user._id, AmountRemaining)
+            if (userAmount.walletAmount > 0) {
+                AmountRemaining = userAmount.Amount - userAmount.walletAmount
+                if (AmountRemaining > 0) {
+                    walletAmount = 0
+                    AmountRemaining = AmountRemaining - amountPaid
+                    if(AmountRemaining < 0){
+                        walletAmount = Math.abs(AmountRemaining);
+                        AmountRemaining = 0
+                    }
+                }else if(AmountRemaining < 0 ){
+                    walletAmount = Math.abs(AmountRemaining)
+                    AmountRemaining = 0
+
+                }
+            }else if(userAmount.walletAmount = 0){
+                console.log("userAmount", userAmount.Amount)
+                AmountRemaining = userAmount.Amount - amountPaid
+                console.log("AmountRemaining inside:", AmountRemaining);
+                if(AmountRemaining<0){
+                    walletAmount = userAmount.walletAmount + Math.abs(AmountRemaining);
+                    AmountRemaining = 0
+                }
             }
+            console.log("walletAmount:", walletAmount, "AmountRemaining", AmountRemaining);
+          let userDetail =  await UserService.updateUserAmountWallet(userId, walletAmount, AmountRemaining)
+            
+            // if(AmountRemaining < 0){
+              
+            //     await UserService.updateUserWallet(user._id, walletAmount)
+            // }else{
+            //     await UserService.updateUserAmount(user._id, AmountRemaining)
+            // }
 
-            let orderDetail =  await OrderService.getOrders({user: user._id})
+            // let orderDetail =  await OrderService.getOrders({user: user._id})
 
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, orderDetail )
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, userDetail )
         } catch (error) {
             logger.error(JSON.stringify({
                 EVENT: "Error",

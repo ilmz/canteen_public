@@ -58,6 +58,21 @@ class userAuthValidation {
 		if (value)
 			next()
 	}
+    static async getUser(req, res, next) {
+        req.body.token = req.headers.authorization;
+
+		let schema = Joi.object().keys({
+            token: Joi.string().required().error(new Error("authToken is required")),
+		})
+
+		const { value, error } = schema.validate(req.body)
+		if (error) {
+			logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
+			return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
+		}
+		if (value)
+			next()
+	}
 	
 }
 

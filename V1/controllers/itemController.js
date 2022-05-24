@@ -85,12 +85,24 @@ class item {
     async getItem(req, res) {
         const language = req.headers.lan;
         try {
+            let user = req.decoded
+            console.log("user", user)
             let limit = parseInt(req.query.limit) || 10;
             let page = parseInt(req.query.page) || 1;
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
-
-            let allItems = await itemService.getItems({isDeleted: false, isActive: true})
+            let params = null
+            let isActive = null
+            if(user.role ==0){
+                // isActive = true
+                params =   {isDeleted: false,  isActive: true}
+            }
+            else if(user.role == 1){
+                params = {isDeleted: false}
+                // isActive = 0 || 1
+            }
+            // console.log("isActive:", isActive);
+            let allItems = await itemService.getItems(params)
             let itemCount =  await itemService.countItems({limit, offset, isDeleted: false})
             let pages = Math.ceil(itemCount / limit);
             if ((pages - page) > 0) {

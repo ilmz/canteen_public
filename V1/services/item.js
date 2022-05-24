@@ -27,4 +27,4 @@ module.exports = new itemService();
 //Notifications , money deduction and total amount left
 //add category to 50
 // jaggu entry amount remaining amount, user image
-//Seearch filter, 1)Userlisting api , 2)price update , 3)product enable disable, product update remove image update, pagination limit remove from item api
+//Seearch filter, 1)Userlisting api , 2)price update , 3)product enable disable, 4)product update remove image update, pagination limit remove from item api

@@ -14,8 +14,9 @@ class UserService {
   getUserById = (_id) => User.findOne({ _id, role: { $in: [constants.role.user] } });
   getUserAmount = (_id) => User.findOne({ _id, role: { $in: [constants.role.user] } }).select('Amount walletAmount');
   getUserBySocialLogin = (social_login_id) => User.findOne({ social_login_id, role: { $in: [constants.role.user] } });
-  updateUserAmount = (userId, amount) => User.updateOne({id: userId}, { $set: { Amount: amount }})
-  updateUserWallet = (userId, walletAmount) => User.updateOne({id: userId}, { $set: { walletAmount }})
+  updateUserAmount = (userId, amount) => User.findOneAndUpdate({_id: userId}, { $set: { Amount: amount }}, {new: true})
+  updateUserWallet = (userId, walletAmount) => User.updateOne({_id: userId}, { $set: { walletAmount }})
+  updateUserAmountWallet = (userId, walletAmount, amount) => User.findOneAndUpdate({_id: userId}, { $set: { walletAmount, Amount: amount }}, {new: true})
 
   getUsers = () => User.find({isDeleted: false, role: { $in: [constants.role.user] }})
 

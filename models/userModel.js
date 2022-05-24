@@ -35,7 +35,13 @@ const userSchema = new mongoose.Schema({
   },
   walletAmount: {
     type: Number,
-    default: 0.00
+    default: 0.00,
+    validate: {
+      validator: function (val) {
+        return val >= 0;
+      },
+      message: 'wallet amount should be greater than or equal to 0',
+    },
   },
   status: {
     type: Boolean,
