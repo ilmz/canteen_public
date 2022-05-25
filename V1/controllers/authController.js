@@ -32,10 +32,12 @@ exports.signup = async (req, res, next) => {
       await UserService.updateUsersession(expiredSessionIds)
 
     }
-    let session = { ip: conRemoteAddress, userAgent, deviceType: devicetype, registerToken }
+    const newUser = await AdminService.createAdmin({ name, email, password, passwordConfirm });
+
+    let session = { ip: conRemoteAddress, userAgent, deviceType: devicetype, registerToken, user: newUser._id }
     await UserService.createSession(session)
 
-    const newUser = await AdminService.createAdmin({ name, email, password, passwordConfirm });
+    
 
     let Result = await commanFunction.createSendToken(newUser, 201, req, res, session);
 
@@ -73,7 +75,7 @@ exports.login = catchAsync(async (req, res, next) => {
       await UserService.updateUsersession(expiredSessionIds)
 
     }
-    let session = { ip: conRemoteAddress, userAgent,deviceType: devicetype, registerToken }
+    let session = { ip: conRemoteAddress, userAgent,deviceType: devicetype, registerToken, user: user._id }
     await UserService.createSession(session)
 
     //3.) if everything ok , then send token to client

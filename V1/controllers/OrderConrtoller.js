@@ -10,6 +10,7 @@ const OrderService  = require('../services/order');
 const UserService  = require('../services/user');
 const { logger } = require('../../logger/logger');
 const { isNull, isEmpty } = require('underscore');
+const {notifications} = require('../../notifications/notification')
 
 
 class Order {
@@ -127,7 +128,7 @@ class Order {
             let orderDetail =  await OrderService.getOrders({user: user._id})
             let userAmount =  await UserService.getUserAmount(user._id);
             // console.log("userAmount:", userAmount);
-            let Response = {orderDetail, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
+            let Response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, orderDetail, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Response )
         } catch (error) {
@@ -174,15 +175,13 @@ class Order {
             }
             // console.log("walletAmount:", walletAmount, "AmountRemaining", AmountRemaining);
           let userDetail =  await UserService.updateUserAmountWallet(userId, walletAmount, AmountRemaining)
-            
-            // if(AmountRemaining < 0){
-              
-            //     await UserService.updateUserWallet(user._id, walletAmount)
-            // }else{
-            //     await UserService.updateUserAmount(user._id, AmountRemaining)
-            // }
 
-            // let orderDetail =  await OrderService.getOrders({user: user._id})
+        //   let userSession = await UserService.findOneUserSessionById(userId)
+        //   if(userSession){
+        //     notifications(userSession.registerToken, { notification: notification, data: data })
+        //   }
+            
+          
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, userDetail )
         } catch (error) {

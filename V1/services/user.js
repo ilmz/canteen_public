@@ -31,6 +31,7 @@ class UserService {
   //UserSession
   findUserSession  = (params) => UserSession.find(params)
   findOneUserSession  = (registerToken) => UserSession.findOne({registerToken, isDeleted: false})
+  findOneUserSessionById  = (userId) => UserSession.findOne({user: userId, isDeleted: false}).select('registerToken')
   createSession = (params) => UserSession.create(params)
 
   updateUsersession = (expiredSessionIds) => UserSession.updateMany({ _id: { $in: expiredSessionIds } }, {

@@ -58,7 +58,7 @@ class user {
               await UserService.updateUsersession(expiredSessionIds)
               
             }
-            let session = {ip: conRemoteAddress, userAgent, deviceType: devicetype, registerToken}
+            let session = {ip: conRemoteAddress, userAgent, deviceType: devicetype, registerToken, user: result._id}
             await UserService.createSession(session)
 
             let resultDetails = await commanFunction.createSendToken(result, 201, req, res, session);
