@@ -125,8 +125,11 @@ class Order {
             let user =  req.decoded;
             
             let orderDetail =  await OrderService.getOrders({user: user._id})
+            let userAmount =  await UserService.getUserAmount(user._id);
+            // console.log("userAmount:", userAmount);
+            let Response = {orderDetail, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
 
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, orderDetail )
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Response )
         } catch (error) {
             logger.error(JSON.stringify({
                 EVENT: "Error",
@@ -143,7 +146,8 @@ class Order {
             let walletAmount = 0
             let {amountPaid, userId} =  req.body
             let userAmount =  await UserService.getUserAmount(userId);
-            console.log("userAmount:", userAmount);
+            // console.log("userAmount:", userAmount);
+
 
             if (userAmount.walletAmount > 0) {
                 AmountRemaining = userAmount.Amount - userAmount.walletAmount
@@ -155,20 +159,20 @@ class Order {
                         AmountRemaining = 0
                     }
                 }else if(AmountRemaining < 0 ){
-                    walletAmount = Math.abs(AmountRemaining)
+                    walletAmount = Math.abs(AmountRemaining) + amountPaid
                     AmountRemaining = 0
 
                 }
-            }else if(userAmount.walletAmount = 0){
-                console.log("userAmount", userAmount.Amount)
+            }else if(userAmount.walletAmount == 0){
+                // console.log("userAmount inside else if: ", userAmount.Amount)
                 AmountRemaining = userAmount.Amount - amountPaid
-                console.log("AmountRemaining inside:", AmountRemaining);
+                // console.log("AmountRemaining inside:", AmountRemaining);
                 if(AmountRemaining<0){
                     walletAmount = userAmount.walletAmount + Math.abs(AmountRemaining);
                     AmountRemaining = 0
                 }
             }
-            console.log("walletAmount:", walletAmount, "AmountRemaining", AmountRemaining);
+            // console.log("walletAmount:", walletAmount, "AmountRemaining", AmountRemaining);
           let userDetail =  await UserService.updateUserAmountWallet(userId, walletAmount, AmountRemaining)
             
             // if(AmountRemaining < 0){

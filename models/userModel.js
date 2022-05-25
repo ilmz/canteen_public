@@ -90,13 +90,13 @@ const userSchema = new mongoose.Schema({
  } 
 );
 
-userSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'priflePic',
-    select: '-__v -createdAt -updatedAt',
-  });
-  next();
-});
+// userSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'priflePic',
+//     select: '-__v -createdAt -updatedAt',
+//   });
+//   next();
+// });
 
 
 userSchema.pre('save', async function (next) {
