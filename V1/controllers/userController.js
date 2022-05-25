@@ -18,7 +18,7 @@ class user {
         const { language, devicetype } = req.headers;
         try {
 
-            let { name, email, socialType, social_login_id, registerToken, profileId } = req.body;
+            let { name, email, socialType, social_login_id, registerToken, profileId, profileUrl } = req.body;
             const roles = role.user;
             const body = {};
             let result;
@@ -43,7 +43,7 @@ class user {
 
             }
             else if(!Exist){
-                result = await UserService.createUser({ name, email, isSocial: 1, social_type: socialType, social_login_id, role: roles, priflePic: profileId })
+                result = await UserService.createUser({ name, email, isSocial: 1, social_type: socialType, social_login_id, role: roles, profilePic: profileId, profileUrl })
                 console.log("result:", result);
                 // await UserSessionService 
 

@@ -19,7 +19,8 @@ class userAuthValidation {
             passwordConfirm             : Joi.string().optional(),
             registerToken               : Joi.string().required(),
             role                        : Joi.number().optional(),
-            profileId                   : Joi.string().optional()
+            profileId                   : Joi.string().optional(),
+            profileUrl                  : Joi.string().optional(),
 		})
 
 		const { value, error } = schema.validate(req.body)

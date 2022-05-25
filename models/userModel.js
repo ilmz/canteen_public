@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema({
     ref: Attachment,
     default: null
   },
+  profileUrl: {
+    type: String,
+    default: null
+  },
   password: {
     type: String,
     required: [false, 'A user must have a password'],
