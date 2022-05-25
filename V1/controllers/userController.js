@@ -35,9 +35,12 @@ class user {
             console.log("ip:", conRemoteAddress);
 
 
-            let Exist = await UserService.getUserBySocialLogin(social_login_id)
+            let Exist = await UserService.getUserBySocialLogin(social_login_id);
+
+           
 
             if (Exist) {
+                Exist = await UserService.updateUser(Exist._id, { name, email , profilePic: profileId, profileUrl })
                 result = Exist
                 // console.log("result:", result);
 

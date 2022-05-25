@@ -176,10 +176,15 @@ class Order {
             // console.log("walletAmount:", walletAmount, "AmountRemaining", AmountRemaining);
           let userDetail =  await UserService.updateUserAmountWallet(userId, walletAmount, AmountRemaining)
 
-        //   let userSession = await UserService.findOneUserSessionById(userId)
-        //   if(userSession){
-        //     notifications(userSession.registerToken, { notification: notification, data: data })
-        //   }
+          let notification = {
+            title: `Amount updated`,
+            body  : "amount deleted"
+        }
+
+          let userSession = await UserService.findOneUserSessionById(userId)
+          if(userSession){
+            notifications(userSession.registerToken, { notification: notification, data: walletAmount })
+          }
             
           
 
@@ -191,5 +196,22 @@ class Order {
             }));
         }
     }
+    async deviceTokenTest (req, res){
+
+        // const {title,  body} =  req.body;
+
+        let notification = {
+            title: `Amount updated`,
+            body  : "amount deleted"
+        }
+        let deviceToken = 'dfUpjimmYkmEqzMWA3Ol-L:APA91bFq0lum-ZyePSqSjclPCNzl_BEjFUxI2sBsG_Qly47VdB9zCVamsm72cssZ6X4N0FK3sLgBM4SPBIXCIXhqPY8mZW2-Z2WmaH-8tEoLo1ajLD4x7M3sxVnpOBoVSValxf4hnehd'
+        notifications(deviceToken, { notification: notification })
+
+    }
 }
+
 module.exports = new Order
+
+
+
+

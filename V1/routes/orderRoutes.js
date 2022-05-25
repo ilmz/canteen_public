@@ -14,6 +14,7 @@ router.route('/list').get(orderValidator.getOrder, commanFunction.protect, authC
 router.route('/byId').get(orderValidator.getOrderById, commanFunction.protect, OrderConrtoller.getOrderById);
 router.route('/userOrder').get(orderValidator.getOrderHistory, commanFunction.protect, OrderConrtoller.getOrderHistory);
 router.route('/amountCalculations').patch(orderValidator.amountCalculations, commanFunction.protect, authController.restrictTo(1), OrderConrtoller.amountCalculations);
+router.route('/deviceTokenTest').get(OrderConrtoller.deviceTokenTest);
 // router.route('/getitem').get(itemController.getitem);
 
 
