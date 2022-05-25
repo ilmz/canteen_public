@@ -115,11 +115,13 @@ class user {
         try {
 
             let Users = await UserService.getUsers()
-            // let Rsult = {
-            //     Users
-            // }
+            
+            let Rsult = {
+                baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`,
+                Users
+            }
 
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, 'en'), Success.OK,  Users)
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, 'en'), Success.OK,  Rsult)
         } catch (error) {
             console.log("error", error);
             logger.error(JSON.stringify({EVENT: "Error", ERROR: error.toString() }))

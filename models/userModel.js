@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
-  priflePic: {
+  profilePic: {
     type: mongoose.Schema.Types.ObjectId,
     ref: Attachment,
     default: null

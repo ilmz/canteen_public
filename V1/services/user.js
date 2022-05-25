@@ -12,7 +12,7 @@ class UserService {
 
   // get user by id
   getUserById = (_id) => User.findOne({ _id, role: { $in: [constants.role.user] } }).populate({
-    path: 'priflePic',
+    path: 'profilePic',
     select: '-__v -createdAt -updatedAt',
   });;
   getUserAmount = (_id) => User.findOne({ _id, role: { $in: [constants.role.user] } }).select('Amount walletAmount');
@@ -22,9 +22,9 @@ class UserService {
   updateUserAmountWallet = (userId, walletAmount, amount) => User.findOneAndUpdate({_id: userId}, { $set: { walletAmount, Amount: amount }}, {new: true})
 
   getUsers = () => User.find({isDeleted: false, role: { $in: [constants.role.user] }}).populate({
-    path: 'priflePic',
+    path: 'profilePic',
     select: '-__v -createdAt -updatedAt',
-  });
+  }).select('-__v');
 
   
 
