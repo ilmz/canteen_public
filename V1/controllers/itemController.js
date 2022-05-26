@@ -87,8 +87,8 @@ class item {
         try {
             let user = req.decoded
             console.log("user", user)
-            let limit = parseInt(req.query.limit) || 10;
-            let page = parseInt(req.query.page) || 1;
+            // let limit = parseInt(req.query.limit) || 10;
+            // let page = parseInt(req.query.page) || 1;
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
             let params = null

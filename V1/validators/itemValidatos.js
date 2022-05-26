@@ -12,8 +12,8 @@ class itemValidations {
 
 		let schema = Joi.object().keys({
             token: Joi.string().required().error(new Error("authToken is required")),
-            page: Joi.number().optional().default(1),
-            limit: Joi.number().optional().default(10),
+            // page: Joi.number().optional().default(1),
+            // limit: Joi.number().optional().default(10),
 		})
 
 		const { value, error } = schema.validate(req.body)
