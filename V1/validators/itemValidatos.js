@@ -7,13 +7,13 @@ class itemValidations {
 
     static async getItem(req, res, next) {
         req.body.token = req.headers.authorization;
-        // req.body.limit      = req.query.limit;
-        // req.body.page       = req.query.page;
+        req.body.limit      = req.query.limit;
+        req.body.page       = req.query.page;
 
 		let schema = Joi.object().keys({
             token: Joi.string().required().error(new Error("authToken is required")),
-            // page: Joi.number().optional().default(1),
-            // limit: Joi.number().optional().default(10),
+            page: Joi.number().optional().default(1),
+            limit: Joi.number().optional().default(10),
 		})
 
 		const { value, error } = schema.validate(req.body)
