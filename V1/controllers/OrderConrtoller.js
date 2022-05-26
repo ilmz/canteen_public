@@ -53,7 +53,7 @@ class Order {
             let userSession = await UserService.findOneUserSessionById(adminDetail._id)
 
             if (userSession && UserOrder) {
-                notifications(userSession.registerToken, { notification: notification, data: data })
+                notifications(userSession.registerToken, { notification: userNotification, data: data })
             }
 
 
