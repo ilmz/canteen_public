@@ -167,7 +167,7 @@ class Order {
             let walletAmount = 0
             let { amountPaid, userId } = req.body
             let userAmount = await UserService.getUserAmount(userId);
-            // console.log("userAmount:", userAmount);
+            console.log("userAmount:", userAmount);
 
 
             if (userAmount.walletAmount > 0) {
@@ -210,6 +210,7 @@ class Order {
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, userDetail)
         } catch (error) {
+            console.log("error:", error);
             logger.error(JSON.stringify({
                 EVENT: "Error",
                 ERROR: error.toString()
