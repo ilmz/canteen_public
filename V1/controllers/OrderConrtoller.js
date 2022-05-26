@@ -5,7 +5,7 @@ const catchAsync = require('../../utils/catchAsync');
 const {sendCustomResponse} = require('../../responses/responses')
 const { responseMessageCode }= require('../../responses/messageCodes') ;
 const { getResponseMessage }= require('../../language/multilanguageController') ;
-const { Success, BadRequest, role, serverError, PAYMENT_STATUS  }  = require('../../constants/constants') ;
+const { Success, BadRequest, role, serverError, PAYMENT_STATUS, NOTIFICATION_TYPE  }  = require('../../constants/constants') ;
 const OrderService  = require('../services/order');
 const UserService  = require('../services/user');
 const { logger } = require('../../logger/logger');
@@ -18,24 +18,44 @@ class Order {
         const language = req.headers.lan;
         try {
             const user = req.decoded;
+            console.log("user:", user);
             const { items } = req.body
             let userAmount = 0;
             let sum = 0
-            userAmount =  await UserService.getUserAmount(user._id);
+            userAmount = await UserService.getUserAmount(user._id);
             console.log("userAmount:", userAmount);
-           
-            for(let item of items){
-               sum  +=  (item.quantity * item.price);
-             
-            }
-            let toPay =  sum
-            userAmount.Amount += toPay
-            console.log(" userAmount.Amount:",  userAmount.Amount);
 
-           let amountUpdated =  await UserService.updateUserAmount(user._id, userAmount.Amount)
-           console.log("amountUpdated:", amountUpdated);
-            
-            let UserOrder = await OrderService.createOrder({items, user, toPay, payStatus: PAYMENT_STATUS.PENDING})
+            for (let item of items) {
+                sum += (item.quantity * item.price);
+
+            }
+            let toPay = sum
+            userAmount.Amount += toPay
+            console.log(" userAmount.Amount:", userAmount.Amount);
+
+            let amountUpdated = await UserService.updateUserAmount(user._id, userAmount.Amount)
+            console.log("amountUpdated:", amountUpdated);
+
+            let userNotification = {
+                ...NOTIFICATION_TYPE.ORDER_PLACED
+              };
+            let data = {
+                items: `${items}`,
+                toPay: `${toPay}`
+            }
+
+            let UserOrder = await OrderService.createOrder({ items, user, toPay, payStatus: PAYMENT_STATUS.PENDING })
+
+            userNotification.message = userNotification.body.replace('{userName}', user.name)
+
+            let adminDetail = await UserService.getUserByRole()
+
+            let userSession = await UserService.findOneUserSessionById(adminDetail._id)
+
+            if (userSession && UserOrder) {
+                notifications(userSession.registerToken, { notification: notification, data: data })
+            }
+
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, UserOrder);
         } catch (error) {
@@ -52,7 +72,7 @@ class Order {
         // const transaction = await sequalize.transaction();
         const { regioncode } = req.headers;
         try {
-          
+
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.ACTION_COMPLETE, language || 'en'), Success.OK, feedbackComment);
         } catch (error) {
 
@@ -142,11 +162,11 @@ class Order {
         const language = req.headers.lan;
         try {
             // let 
-            let user =  req.decoded;
+            let user = req.decoded;
             let AmountRemaining = 0;
             let walletAmount = 0
-            let {amountPaid, userId} =  req.body
-            let userAmount =  await UserService.getUserAmount(userId);
+            let { amountPaid, userId } = req.body
+            let userAmount = await UserService.getUserAmount(userId);
             // console.log("userAmount:", userAmount);
 
 
@@ -155,40 +175,40 @@ class Order {
                 if (AmountRemaining > 0) {
                     walletAmount = 0
                     AmountRemaining = AmountRemaining - amountPaid
-                    if(AmountRemaining < 0){
+                    if (AmountRemaining < 0) {
                         walletAmount = Math.abs(AmountRemaining);
                         AmountRemaining = 0
                     }
-                }else if(AmountRemaining < 0 ){
+                } else if (AmountRemaining < 0) {
                     walletAmount = Math.abs(AmountRemaining) + amountPaid
                     AmountRemaining = 0
 
                 }
-            }else if(userAmount.walletAmount == 0){
+            } else if (userAmount.walletAmount == 0) {
                 // console.log("userAmount inside else if: ", userAmount.Amount)
                 AmountRemaining = userAmount.Amount - amountPaid
                 // console.log("AmountRemaining inside:", AmountRemaining);
-                if(AmountRemaining<0){
+                if (AmountRemaining < 0) {
                     walletAmount = userAmount.walletAmount + Math.abs(AmountRemaining);
                     AmountRemaining = 0
                 }
             }
-            // console.log("walletAmount:", walletAmount, "AmountRemaining", AmountRemaining);
-          let userDetail =  await UserService.updateUserAmountWallet(userId, walletAmount, AmountRemaining)
+            let data = { walletAmount: `${walletAmount}`, Amount: `${AmountRemaining}` }
+            let userDetail = await UserService.updateUserAmountWallet(userId, walletAmount, AmountRemaining)
 
-          let notification = {
-            title: `Amount updated`,
-            body  : "amount deleted"
-        }
+            let userNotification = {
+                ...NOTIFICATION_TYPE.AMOUNT_UPDATED
+            };
 
-          let userSession = await UserService.findOneUserSessionById(userId)
-          if(userSession){
-            notifications(userSession.registerToken, { notification: notification, data: walletAmount })
-          }
-            
-          
+            let userSession = await UserService.findOneUserSessionById(userId)
+            if (userSession) {
+                console.log("userSession:", userSession);
+                notifications(userSession.registerToken, { notification: userNotification, data: data })
+            }
 
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, userDetail )
+
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, userDetail)
         } catch (error) {
             logger.error(JSON.stringify({
                 EVENT: "Error",

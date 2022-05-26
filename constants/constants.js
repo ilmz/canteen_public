@@ -88,7 +88,19 @@ const requestMethods = {
     DELETE : "DELETE",
     PUT    : "PUT"
 };
+let NOTIFICATION_TYPE = {
+    ORDER_PLACED: {
+      title: `Order Placed`,
+      body: `{userName} has placed order`
+    },
+    AMOUNT_UPDATED: {
+      title: "Amount updated",
+      body:  "Admin updated your amount"
+    },
+   
+  }
+  
 
 
 module.exports =  { Success, STATUS, BadRequest, serverError, role, permission, 
-    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES }
+    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE }

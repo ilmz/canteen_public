@@ -5,7 +5,7 @@ const notification_options = {
     priority: "high",
     timeToLive: 60 * 60 * 24
 };
-console.log("admin",admin)
+// console.log("admin",admin)
 exports.notifications = async (registrationToken, message_notification) => {
     message_notification.notification.sound = "default"
     logger.info(JSON.stringify({ EVENT: "NOTIFICATION_DATA", message_notification }))

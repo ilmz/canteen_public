@@ -27,6 +27,11 @@ class UserService {
     select: '-__v -createdAt -updatedAt',
   }).select('-__v');
 
+  getUserByRole = () => User.findOne({isDeleted: false, role: { $in: [constants.role.admin] }}).populate({
+    path: 'profilePic',
+    select: '-__v -createdAt -updatedAt',
+  }).select('-__v');
+
   
 
   //UserSession
