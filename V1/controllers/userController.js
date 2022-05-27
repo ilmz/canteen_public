@@ -11,6 +11,7 @@ const { Success, BadRequest, role, serverError  }  = require('../../constants/co
 const UserService  = require('../services/user');
 const { logger } = require('../../logger/logger');
 const { isNull } = require('underscore');
+const paymentService =  require('../services/payment')
 
 class user {
     
@@ -117,7 +118,7 @@ class user {
     userListing = async (req, res) => {
         try {
 
-            let Users = await UserService.getUsers()
+            let Users = await UserService.getUsers();
             
             let Rsult = {
                 baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`,

@@ -5,7 +5,7 @@ class itemService {
 
     updateItem = (match, params) => item.findOneAndUpdate(match, { $set: params}, {new: true});
     getItems = async (params) => {
-        const items = await item.find(params).sort('-createdAt');
+        const items = await item.find(params).sort('name');
         return items;
     }
     getItem = async (params) => {

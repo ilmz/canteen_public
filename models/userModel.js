@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator');
-const Attachment =  require('./attachment')
-// import { genSaltSync, hashSync, compareSync } from 'bcrypt';
-const {genSaltSync, hashSync, compareSync, hash, compare }  = require('bcrypt')
+const Attachment = require('./attachment')
+const { genSaltSync, hashSync, compareSync, hash, compare } = require('bcrypt')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -89,18 +88,22 @@ const userSchema = new mongoose.Schema({
     default: false,
   }
 },
- {
-  timestamps: true,
- } 
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+
+  },
+
 );
 
-// userSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'priflePic',
-//     select: '-__v -createdAt -updatedAt',
-//   });
-//   next();
-// });
+//Virtual populate
+userSchema.virtual('paymentHistory', {
+  ref: "paymentHistory",
+  foreignField: 'user',
+  localField: '_id',
+});
+
 
 
 userSchema.pre('save', async function (next) {

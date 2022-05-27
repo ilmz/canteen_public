@@ -11,6 +11,7 @@ const UserService  = require('../services/user');
 const { logger } = require('../../logger/logger');
 const { isNull, isEmpty } = require('underscore');
 const {notifications} = require('../../notifications/notification')
+const paymentService =  require('../services/payment')
 
 
 class Order {
@@ -45,6 +46,8 @@ class Order {
             }
 
             let UserOrder = await OrderService.createOrder({ items, user, toPay, payStatus: PAYMENT_STATUS.PENDING })
+
+            let paymentHistory =  await paymentService.createPaymentHistory({user: user._id, amount: toPay, Paid: 0, OrderId: UserOrder._id})
 
             userNotification.message = userNotification.body.replace('{userName}', user.name)
 
@@ -195,6 +198,8 @@ class Order {
             }
             let data = { walletAmount: `${walletAmount}`, Amount: `${AmountRemaining}` }
             let userDetail = await UserService.updateUserAmountWallet(userId, walletAmount, AmountRemaining)
+
+            let paymentHistory =  await paymentService.createPaymentHistory({user: userId, amount: amountPaid, Paid: 1})
 
             let userNotification = {
                 ...NOTIFICATION_TYPE.AMOUNT_UPDATED

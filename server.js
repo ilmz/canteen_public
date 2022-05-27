@@ -22,15 +22,17 @@ const DB = process.env.DATABASE_HOST.replace(
   process.env.DATABASE_PASSWORD
 );
 const MongoUrl = process.env.MONGO_URI
-// console.log("MongoUrl:", MongoUrl, "username:", process.env.DATABASE_USERNAME, "password:", process.env.DATABASE_PASSWORD)
+
 mongoose
-  .connect(MongoUrl, {
+  .connect(
+    MongoUrl, {
     user: process.env.DATABASE_USERNAME,
     pass: process.env.DATABASE_PASSWORD,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => console.log('DB connection is successful'));
+
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
