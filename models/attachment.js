@@ -3,12 +3,6 @@ const { Schema } = mongoose;
 
 
 const attachmentSchema = new Schema({
-    // item: {
-    //     type: Schema.Types.ObjectId,
-    //     // required: true,
-    //     index: true,
-    //     ref: 'Item',
-    // },
     name: String,
     image_url: String,
     thumb_url: String,

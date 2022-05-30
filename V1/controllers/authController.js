@@ -95,9 +95,7 @@ exports.login = catchAsync(async (req, res, next) => {
     await UserService.updateUsersession(user.sessionDetails._id)
 
     return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, 'en'), Success.OK);
-    // res.status(200).json({
-    //   status: 'success',
-    // });
+    
   };
 
 

@@ -11,7 +11,7 @@ exports.notifications = async (registrationToken, message_notification) => {
     logger.info(JSON.stringify({ EVENT: "NOTIFICATION_DATA", message_notification }))
     await admin.messaging().sendToDevice(registrationToken, message_notification, notification_options)
         .then(response => {
-            logger.info(JSON.stringify({ EVENT: "NOTIFICATION", RESULT: "NOTIFICATION SENT SUCCESSFULLY", RESPONSE: response.successCount }))
+            logger.info(JSON.stringify({ EVENT: "NOTIFICATION", RESULT: "NOTIFICATION SENT SUCCESSFULLY", RESPONSE: response }))
         })
         .catch(error => {
             console.log("error:", error);

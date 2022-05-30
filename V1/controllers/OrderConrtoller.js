@@ -24,7 +24,7 @@ class Order {
             let userAmount = 0;
             let sum = 0
             userAmount = await UserService.getUserAmount(user._id);
-            console.log("userAmount:", userAmount);
+            // console.log("userAmount:", userAmount);
 
             for (let item of items) {
                 sum += (item.quantity * item.price);
@@ -32,10 +32,10 @@ class Order {
             }
             let toPay = sum
             userAmount.Amount += toPay
-            console.log(" userAmount.Amount:", userAmount.Amount);
+            // console.log(" userAmount.Amount:", userAmount.Amount);
 
             let amountUpdated = await UserService.updateUserAmount(user._id, userAmount.Amount)
-            console.log("amountUpdated:", amountUpdated);
+            // console.log("amountUpdated:", amountUpdated);
 
             let userNotification = {
                 ...NOTIFICATION_TYPE.ORDER_PLACED
@@ -230,13 +230,15 @@ class Order {
             title: `Amount updated`,
             body  : "amount deleted"
         }
-        let deviceToken = 'dfUpjimmYkmEqzMWA3Ol-L:APA91bFq0lum-ZyePSqSjclPCNzl_BEjFUxI2sBsG_Qly47VdB9zCVamsm72cssZ6X4N0FK3sLgBM4SPBIXCIXhqPY8mZW2-Z2WmaH-8tEoLo1ajLD4x7M3sxVnpOBoVSValxf4hnehd'
+        let deviceToken = 'cXUq3BLaS4O4ssRdJBvEnL:APA91bG0WrGBvrLOjY7ObhnMblKboK5GeBrob505dAt7GDbDc5Riwo-EpmBkuOg37hYsO7msDHnm1uppKtiSyNEzT86RxjlfTAumv-34E8Nb20CpDrkuLf6cxTfs_XFlzbqbDB74H3-L'
         notifications(deviceToken, { notification: notification })
 
     }
 }
 
 module.exports = new Order
+
+
 
 
 
