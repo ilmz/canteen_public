@@ -206,6 +206,7 @@ class Order {
             };
 
             let userSession = await UserService.findOneUserSessionById(userId)
+            //    let deviceToken = 'cXrob3-bRN-t06HVMrFsKC:APA91bGQ__KNxqCw2nzdwyZ9k8HNPrieCUoCRBfJn3cvn7uH9t3t-jd_3cLXIUNc2ssRTAUU7M6R4Xe43_0AxI5CdWypUM0Lw3zjwh97uqiepOHsvSGvxzzh5L5lB9sZfsU5J1e-TLCt'
             if (userSession) {
                 console.log("userSession:", userSession);
                 notifications(userSession.registerToken, { notification: userNotification, data: data })
@@ -230,7 +231,7 @@ class Order {
             title: `Amount updated`,
             body  : "amount deleted"
         }
-        let deviceToken = 'cXUq3BLaS4O4ssRdJBvEnL:APA91bG0WrGBvrLOjY7ObhnMblKboK5GeBrob505dAt7GDbDc5Riwo-EpmBkuOg37hYsO7msDHnm1uppKtiSyNEzT86RxjlfTAumv-34E8Nb20CpDrkuLf6cxTfs_XFlzbqbDB74H3-L'
+        let deviceToken = 'cXrob3-bRN-t06HVMrFsKC:APA91bGQ__KNxqCw2nzdwyZ9k8HNPrieCUoCRBfJn3cvn7uH9t3t-jd_3cLXIUNc2ssRTAUU7M6R4Xe43_0AxI5CdWypUM0Lw3zjwh97uqiepOHsvSGvxzzh5L5lB9sZfsU5J1e-TLCt'
         notifications(deviceToken, { notification: notification })
 
     }
