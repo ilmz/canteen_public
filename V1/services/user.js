@@ -23,11 +23,12 @@ class UserService {
   updateUserAmountWallet = (userId, walletAmount, amount) => User.findOneAndUpdate({_id: userId}, { $set: { walletAmount, Amount: amount }}, {new: true})
 
   getUsers = () => User.find({isDeleted: false, role: { $in: [constants.role.user] }}).populate({
-    path: 'profilePic',
-    select: '-__v -createdAt -updatedAt',
+    path    : 'profilePic',
+    select  : '-__v -createdAt -updatedAt',
   }).select('-__v').populate({
-    path: 'paymentHistory',
-    select: '-__v'
+    path    :   'paymentHistory',
+    select  :   '-id -__v ',
+    options :   { sort: { 'createdAt': -1 } } 
   });
 
   getUserByRole = () => User.findOne({isDeleted: false, role: { $in: [constants.role.admin] }}).populate({

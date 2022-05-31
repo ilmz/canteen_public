@@ -73,6 +73,12 @@ const  ATTACHMENTS =  {
     VIDEO: 'video',
     FONT: 'font'
 };
+const TICKET_STATUS = {
+    "PENDING"   : 1,
+    "INPROGRESS": 2,
+    "COMPLETE"  : 3,
+    "REOPEN"    : 4
+}
 
 const MENU_ITEM_TYPES =  {
    };
@@ -103,4 +109,4 @@ let NOTIFICATION_TYPE = {
 
 
 module.exports =  { Success, STATUS, BadRequest, serverError, role, permission, 
-    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE }
+    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE, TICKET_STATUS }

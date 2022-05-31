@@ -38,7 +38,7 @@ class commanFunction {
 
         }
 
-        let Result = {token,  data: {
+        let Result = {token,   baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, data: {
             user,
         },}
         return Result
@@ -89,6 +89,25 @@ class commanFunction {
                 }
             })
         return {thumbnail, root}
+    }
+      static compressPhotos = async  (files) => {
+        const thumbArr = []
+        files.map(async(file, i) => {
+          const thumbnail = `/uploads/thumbnail/${file.fieldname}-${Date.now()}.${file.originalname.split('.').pop()}`
+          thumbArr.push(thumbnail)
+          // console.log("thumbnail:", thumbnail)
+          const s = await sharp(root + "/" + file.path, { animated: true })
+          .resize({ width: 200, }).toFormat('jpeg', 'png', 'gif', 'jpg')
+          .toFile(root + thumbnail, function (err, res) {
+              if (err) {
+                  console.log("error:", err);
+                  logger.error(JSON.stringify({ EVENT: "THUMBNAIL", ERROR: err }))
+              }
+          })
+
+        })
+      
+        return thumbArr
     }
 
      static protect = catchAsync(async (req, res, next) => {

@@ -55,6 +55,7 @@ class Order {
 
             let userSession = await UserService.findOneUserSessionById(adminDetail._id)
 
+           let deviceToken ='cXrob3-bRN-t06HVMrFsKC:APA91bGQ__KNxqCw2nzdwyZ9k8HNPrieCUoCRBfJn3cvn7uH9t3t-jd_3cLXIUNc2ssRTAUU7M6R4Xe43_0AxI5CdWypUM0Lw3zjwh97uqiepOHsvSGvxzzh5L5lB9sZfsU5J1e-TLCt'
             if (userSession && UserOrder) {
                 notifications(userSession.registerToken, { notification: userNotification, data: data })
             }
@@ -206,10 +207,11 @@ class Order {
             };
 
             let userSession = await UserService.findOneUserSessionById(userId)
-            //    let deviceToken = 'cXrob3-bRN-t06HVMrFsKC:APA91bGQ__KNxqCw2nzdwyZ9k8HNPrieCUoCRBfJn3cvn7uH9t3t-jd_3cLXIUNc2ssRTAUU7M6R4Xe43_0AxI5CdWypUM0Lw3zjwh97uqiepOHsvSGvxzzh5L5lB9sZfsU5J1e-TLCt'
+               let deviceToken = 'cXrob3-bRN-t06HVMrFsKC:APA91bGQ__KNxqCw2nzdwyZ9k8HNPrieCUoCRBfJn3cvn7uH9t3t-jd_3cLXIUNc2ssRTAUU7M6R4Xe43_0AxI5CdWypUM0Lw3zjwh97uqiepOHsvSGvxzzh5L5lB9sZfsU5J1e-TLCt'
             if (userSession) {
                 console.log("userSession:", userSession);
-                notifications(userSession.registerToken, { notification: userNotification, data: data })
+                // notifications(userSession.registerToken, { notification: userNotification, data: data })
+                notifications(deviceToken, { notification: userNotification, data: data })
             }
 
 
