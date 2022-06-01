@@ -4,10 +4,11 @@ const catchAsync = require('../../utils/catchAsync');
 const {sendCustomResponse} = require('../../responses/responses')
 const { responseMessageCode }= require('../../responses/messageCodes') ;
 const { getResponseMessage }= require('../../language/multilanguageController') ;
-const { Success, BadRequest, role, serverError, PAYMENT_STATUS, NOTIFICATION_TYPE, TICKET_STATUS  }  = require('../../constants/constants') ;
+const { Success, BadRequest, role, serverError, PAYMENT_STATUS, NOTIFICATION_TYPE, TICKET_STATUS, EMAIL_TYPE  }  = require('../../constants/constants') ;
 const { logger } = require('../../logger/logger');
 const { isNull, isEmpty } = require('underscore');
 const {notifications} = require('../../notifications/notification')
+const {sendEmailNotification} =  require ('../../utils/email')
 const ticketService = require('../services/ticketSystem')
 const attachmentService = require('../services/attachment')
 const sizeOf = require('image-size')
@@ -22,9 +23,14 @@ class ticketSystem {
 
             const { title, description, attachmentId } = req.body
 
-            let params = { title, description, attachmentId, ticketStatus: TICKET_STATUS.PENDING }
+            let params = { title, description, attachmentId, ticketStatus: TICKET_STATUS.PENDING, user: user._id }
 
             let ticketDetails = await ticketService.createTicket(params)
+
+            sendEmailNotification(
+                { type: EMAIL_TYPE.TICKET_EMAIL, isEmail: true },
+                {  email: 'subhash@illuminz.com', name: "Subhash Chandra" }
+            );
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, ticketDetails);
         } catch (error) {

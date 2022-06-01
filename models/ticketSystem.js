@@ -19,10 +19,10 @@ const ticketSchema = new Schema({
         type: String,
         default: null,
     },
-    attachmentId: {
-        type: Array,
-        default: null,
-    },
+    attachmentId: [{
+        type: Schema.Types.ObjectId,
+        ref: Attachment
+    }],
       
     commentArr: [{
         _id: Schema.Types.ObjectId,
@@ -54,11 +54,11 @@ const ticketSchema = new Schema({
 });
 
 //Virtual populate
-ticketSchema.virtual('attachment', {
-    ref: "Attachment",
-    foreignField: '_id',
-    localField: 'attachmentId.attachment',
-  });
+// ticketSchema.virtual('attachment', {
+//     ref: "Attachment",
+//     foreignField: '_id',
+//     localField: 'attachmentId',
+//   });
 
 const TicketSystem = mongoose.model('TicketSystem', ticketSchema);
 

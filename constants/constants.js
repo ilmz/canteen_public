@@ -105,8 +105,16 @@ let NOTIFICATION_TYPE = {
     },
    
   }
+
+ const EMAIL_TYPE= {
+    TICKET_EMAIL: 'TICKET_EMAIL',
+  }
+ const EMAIL_TEMPLATE_URLS =  {
+    WEBISTE_LOGO: 'https://api.koouth.com/getImages/images/2022/March/original/1fbb7410-991e-11ec-8608-5518c1a4189a.png',
+  }
+
   
 
 
 module.exports =  { Success, STATUS, BadRequest, serverError, role, permission, 
-    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE, TICKET_STATUS }
+    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE, TICKET_STATUS, EMAIL_TYPE, EMAIL_TEMPLATE_URLS }

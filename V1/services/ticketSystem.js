@@ -11,11 +11,25 @@ class ticketService {
 
 
       getTicket = async (params) => {
-        const ticket = await TicketSystem.findOne(params);
+        const ticket = await TicketSystem.findOne(params).populate(
+            {
+                path    : 'attachmentId',
+                select  : ' -__v ',
+                options : { sort: { 'createdAt': -1 } }
+
+            }
+        );
         return ticket;
       }
-      getTickets = async (params) => {
-        const ticket = await TicketSystem.find(params).sort({createdAt: -1}).select('');
+    getTickets = async (params) => {
+        const ticket = await TicketSystem.find(params).sort({ createdAt: -1 }).populate(
+            {
+                path    : 'attachmentId',
+                select  : ' -__v ',
+                options : { sort: { 'createdAt': -1 } }
+
+            }
+        );
         return ticket;
       }
       countTicket =  async ({limit, skip, isDeleted, isActive}) => {

@@ -30,9 +30,9 @@ class itemValidations {
             token       : Joi.string().required().error(new Error("authToken is required")),
             title       : Joi.string().optional().default('null'),
             description : Joi.string().optional(),
-            attachmentId: Joi.array().items({
-                             attachment  : Joi.string().required().error(new Error("attachment is required")),
-                            }).optional(),
+            attachmentId: Joi.array().items(
+                             Joi.string().required().error(new Error("attachment is required")),
+                            ).optional(),
         })
 		const { value, error } = schema.validate(req.body)
 		if (error) {
@@ -49,9 +49,9 @@ class itemValidations {
             ticketId        :     Joi.string().required().error(new Error("ticket Id is required")),
             title           :     Joi.string().optional().default('null'),
             description     :     Joi.string().optional(),
-            attachmentId    :     Joi.array().items({
-                                         attachment  : Joi.string().required().error(new Error("attachment is required")),
-                                    }).optional(),
+            attachmentId    :     Joi.array().items(
+                                        Joi.string().required().error(new Error("attachment is required")),
+                                    ).optional(),
 		})
 
 		const { value, error } = schema.validate(req.body)
