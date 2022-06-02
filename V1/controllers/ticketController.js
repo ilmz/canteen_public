@@ -10,6 +10,7 @@ const { isNull, isEmpty } = require('underscore');
 const {notifications} = require('../../notifications/notification')
 const {sendEmailNotification} =  require ('../../utils/email')
 const ticketService = require('../services/ticketSystem')
+const UserService = require('../services/user')
 const attachmentService = require('../services/attachment')
 const sizeOf = require('image-size')
 
@@ -29,8 +30,27 @@ class ticketSystem {
 
             sendEmailNotification(
                 { type: EMAIL_TYPE.TICKET_EMAIL, isEmail: true },
-                {  email: 'subhash@illuminz.com', name: "Subhash Chandra" }
+                {  email: 'hr@illuminz.com', name: "Bhavana", title, description, ticketStatus: params.ticketStatus, senderName: user.name }
             );
+
+            let userNotification = {
+                ...NOTIFICATION_TYPE.TICKET_RAISED
+            };
+
+            userNotification.body.replace('{UserName}', user.name)
+
+            let data = {
+                title: `${title}`,
+                description: `${description}`
+            }
+
+            let userSession = await UserService.findOneUserSessionById(user._id)
+               let deviceToken = 'cXrob3-bRN-t06HVMrFsKC:APA91bGQ__KNxqCw2nzdwyZ9k8HNPrieCUoCRBfJn3cvn7uH9t3t-jd_3cLXIUNc2ssRTAUU7M6R4Xe43_0AxI5CdWypUM0Lw3zjwh97uqiepOHsvSGvxzzh5L5lB9sZfsU5J1e-TLCt'
+            if (userSession) {
+                console.log("userSession:", userSession);
+                notifications(userSession.registerToken, { notification: userNotification, data: data })
+                // notifications(deviceToken, { notification: userNotification, data: data })
+            }
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, ticketDetails);
         } catch (error) {

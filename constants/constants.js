@@ -103,6 +103,10 @@ let NOTIFICATION_TYPE = {
       title: "Amount updated",
       body:  "Admin updated your amount"
     },
+    TICKET_RAISED:{
+        title: "Ticket Raised",
+        body: "{UserName} has raised a ticket"
+    }
    
   }
 
@@ -110,7 +114,8 @@ let NOTIFICATION_TYPE = {
     TICKET_EMAIL: 'TICKET_EMAIL',
   }
  const EMAIL_TEMPLATE_URLS =  {
-    WEBISTE_LOGO: 'https://api.koouth.com/getImages/images/2022/March/original/1fbb7410-991e-11ec-8608-5518c1a4189a.png',
+    WEBISTE_LOGO: 'http://54.176.169.179:3000/uploads/thumbnail/photo-1654082187001.png',
+
   }
 
   

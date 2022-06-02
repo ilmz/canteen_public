@@ -40,7 +40,7 @@ let email = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt
             <tfoot style="text-align:center;width:100%;">
             <tr>
                <td style="background:#FFF;border-left:1px solid #F3F4F4;border-right:1px solid #F3F4F4;">
-                  <p style="font-family:'-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';color:#323A49;margin:0;font-size:16px;font-weight:500;line-height:19px;padding-bottom:16px;">Download the Koouth app!</p>
+                  <p style="font-family:'-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';color:#323A49;margin:0;font-size:16px;font-weight:500;line-height:19px;padding-bottom:16px;">Download the Illuminz app!</p>
                   <ul style="margin:0;list-style:none;padding:0;">
                      <li style="display:inline-block;padding:0 5px;margin: 0;"><a href=""><img src="https://gallery.mailchimp.com/b967d871c939e76ecbaddd30d/images/ad9a5201-20e2-4225-843b-9580c85d5d1e.png" alt="" style="height: 38px;"></a>
                      </li>

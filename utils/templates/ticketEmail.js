@@ -12,14 +12,16 @@ let email = `
                   <BR>
                   </p>
                   <p>
-                  You can accept or decline the request from the app.If you haven't downloaded the app yet you can use one of the links below.  
+                   title: {{title}}
                   <BR>
+                  description:{{description}}
                   <BR>
+                  ticketStatus: Pending
                   </p>
                   <p>
                   Thanks,
                   <BR>
-                  Koouth Support Team
+                 illuminz Support Team
                   </p>
 
                </td>

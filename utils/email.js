@@ -28,6 +28,10 @@ async function sendEmailNotification(option, data) {
             case constant.EMAIL_TYPE.TICKET_EMAIL: {
                 let ticketEmailDetail = {
                     name: data.name,
+                    senderName: data.senderName,
+                    title: data.title,
+                    description: data.description,
+                    ticketStatus: data.ticketStatus
                 }
                 let compiledHtml = handlebars.compile(ticketEmail)(ticketEmailDetail)
                 let html = handlebars.compile(headerfooter)({ html: compiledHtml })
