@@ -15,9 +15,10 @@
       "post": {
         "summary": "signUp",
         "tags": ["Admin"],
-        "operationId": "signUp",
+        "operationId": "PostsignUp1",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
         
           {
@@ -65,6 +66,7 @@
         "operationId": "login",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "email",
@@ -98,6 +100,7 @@
         "operationId": "logout",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -120,9 +123,10 @@
       "post": {
         "summary": "signUp",
         "tags": ["User"],
-        "operationId": "signUp",
+        "operationId": "PostsignUp",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
         
           {
@@ -169,9 +173,10 @@
       "get": {
         "summary": "logout",
         "tags": ["User"],
-        "operationId": "logout",
+        "operationId": "Userlogout",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -261,6 +266,7 @@
         "operationId": "getItem",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -303,6 +309,7 @@
         "operationId": "updateItem",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -372,6 +379,7 @@
         "operationId": "deleteItem",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -404,6 +412,7 @@
         "operationId": "getItemById",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -433,7 +442,7 @@
       "post": {
         "summary": "create",
         "tags": ["Category"],
-        "operationId": "create",
+        "operationId": "createCategory",
         "deprecated": false,
         "produces": ["application/json"],
         "consumes": ["application/x-www-form-urlencoded"],
@@ -479,6 +488,7 @@
         "operationId": "getCategories",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -521,6 +531,7 @@
         "operationId": "updateCategory",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -568,6 +579,7 @@
         "operationId": "deleteCategory",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -600,6 +612,7 @@
         "operationId": "getCategoryById",
         "deprecated": false,
         "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
           {
             "name": "Authorization",
@@ -775,24 +788,20 @@
         "properties": {
           "itemId": {
             "type": "string",
-            "required": true,
             "description": "Required"
           },
           "description": {
             "type": "string",
-            "required": false,
             "description": "Optional"
           },
           "price":{
             "type": "number",
             "format": "double",
-            "required": true,
             "description": "Required"
           },
           "quantity":{
             "type": "integer",
             "format": "int32",
-            "required": true,
             "description": "Required"
           }
         }
