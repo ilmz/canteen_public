@@ -67,7 +67,7 @@ app.use("/uploads", express.static(path.join(__dirname, `uploads`)));
 
 /**swagger*/
 const swaggerDocument = require('./swagger/swagger.json');
-app.use("/canteen-doc", swaggerUI.serve, swaggerUI.setup(swaggerDocument, {
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument, {
   swaggerOptions: {
     apisSorter: 'alpha',
     tagsSorter: 'alpha',
