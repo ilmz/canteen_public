@@ -5,6 +5,7 @@ const { Success, BadRequest, role, serverError  }  = require('../../constants/co
 const versionService = require('../services/versionService') 
 const { logger } = require('../../logger/logger');
 const { isEmpty, isNull }  = require('underscore');
+const constant = require('../../constants/constants')
 
 
 
@@ -55,7 +56,7 @@ class versionController {
             const { type, appVersion } = req.query;
             let version = {}
             let Result = null
-            if (type == 0) {
+            if (type == constant.type.ios_device) {
                 version = { ios_version: appVersion }
             } else {
                 version = { android_version: appVersion }

@@ -117,9 +117,13 @@ let NOTIFICATION_TYPE = {
     WEBISTE_LOGO: 'http://54.176.169.179:3000/uploads/thumbnail/photo-1654082187001.png',
 
   }
+  const type = {
+      "ios_device": 0,
+      "android_device": 1
+  }
 
   
 
 
 module.exports =  { Success, STATUS, BadRequest, serverError, role, permission, 
-    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE, TICKET_STATUS, EMAIL_TYPE, EMAIL_TEMPLATE_URLS }
+    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE, TICKET_STATUS, EMAIL_TYPE, EMAIL_TEMPLATE_URLS, type }
