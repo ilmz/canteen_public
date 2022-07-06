@@ -35,6 +35,8 @@ mongoose
 
 
 const port = process.env.PORT || 3000;
+mongoose.set('debug', true)
+
 const server = app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(`App is running on ${port}...`);

@@ -38,8 +38,6 @@ class user {
 
             let Exist = await UserService.getUserBySocialLogin(social_login_id);
 
-           
-
             if (Exist) {
                 Exist = await UserService.updateUser(Exist._id, { name, email , profilePic: profileId, profileUrl })
                 result = Exist

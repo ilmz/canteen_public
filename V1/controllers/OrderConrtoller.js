@@ -28,10 +28,21 @@ class Order {
 
             for (let item of items) {
                 sum += (item.quantity * item.price);
-
             }
             let toPay = sum
             userAmount.Amount += toPay
+            // if( userAmount.walletAmount > 0){
+            //     userAmount.Amount = userAmount.Amount - userAmount.walletAmount
+            //     if(userAmount.Amount < 0){
+            //         userAmount.Amount = 0;
+            //         userAmount.walletAmount = Math.abs(userAmount.Amount)
+            //     }else if(userAmount.Amount > 0){
+            //         userAmount.walletAmount = 0
+            //     }else if(userAmount.Amount == 0){
+            //         userAmount.walletAmount = 0
+            //     }
+            // }
+           
             // console.log(" userAmount.Amount:", userAmount.Amount);
 
             let amountUpdated = await UserService.updateUserAmount(user._id, userAmount.Amount)

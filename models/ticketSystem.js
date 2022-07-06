@@ -3,7 +3,6 @@ const { Schema } = mongoose;
 const  User  = require('./userModel');
 const Attachment =  require('./attachment')
 const { TICKET_STATUS } = require('../constants/constants');
-const { array } = require('joi');
 
 
 const ticketSchema = new Schema({
