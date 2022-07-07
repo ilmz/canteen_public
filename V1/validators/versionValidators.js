@@ -15,7 +15,7 @@ class versionValidator {
             req.body.appVersion =  req.query.appVersion;
 		let schema = Joi.object().keys({
             type        : Joi.number().required().allow(0,1),
-            appVersion  : Joi.number().required()
+            appVersion  : Joi.string().required()
 		})
 
 		const { value, error } = schema.validate(req.body)
@@ -29,8 +29,8 @@ class versionValidator {
     static async createVersion(req, res, next) {
 
 		let schema = Joi.object().keys({
-            ios_version     : Joi.number().optional(),
-            android_version : Joi.number().optional(),
+            ios_version     : Joi.string().optional(),
+            android_version : Joi.string().optional(),
             ios_appLink     : Joi.string().optional(),
             android_appLink : Joi.string().optional(),
             versionId       : Joi.string().optional(),

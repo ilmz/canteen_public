@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const versionSchema = new mongoose.Schema({
-    ios_version: { type: Number, default: null },
-    android_version: { type: Number, default: null },
+    ios_version: { type: String, default: null },
+    android_version: { type: String, default: null },
     ios_appLink: { type: String, default: null },
     android_appLink: { type: String, default: null },
     soft_update: {type: Boolean, default: false},
