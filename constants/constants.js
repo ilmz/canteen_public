@@ -115,7 +115,6 @@ let NOTIFICATION_TYPE = {
   }
  const EMAIL_TEMPLATE_URLS =  {
     WEBISTE_LOGO: 'http://54.176.169.179:3000/uploads/thumbnail/photo-1654082187001.png',
-
   }
   const type = {
       "ios_device": 0,

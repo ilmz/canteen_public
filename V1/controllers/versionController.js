@@ -66,10 +66,10 @@ class versionController {
 
             if (responseVersion == null) {
                 Result = {
-                    softUpdate: 0,
-                    forceUpdate: 0,
-                    androidAppLink: process.env.ANDROID_APP_LINK,
-                    iosAppLink: process.env.IOS_APP_LINK,
+                    soft_update: 0,
+                    force_update: 0,
+                    android_appLink: process.env.ANDROID_APP_LINK,
+                    ios_appLink: process.env.IOS_APP_LINK,
                 }
             } else {
                 Result = { responseVersion }
