@@ -65,12 +65,14 @@ class versionController {
             let responseVersion = await versionService.findOneVersion(version)
 
             if (responseVersion == null) {
-                Result = {
-                    soft_update: 0,
-                    force_update: 0,
+                responseVersion = {
+                    soft_update: false,
+                    force_update: false,
                     android_appLink: process.env.ANDROID_APP_LINK,
                     ios_appLink: process.env.IOS_APP_LINK,
                 }
+
+                Result = {responseVersion}
             } else {
                 Result = { responseVersion }
             }
