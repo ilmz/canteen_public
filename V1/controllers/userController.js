@@ -20,9 +20,9 @@ class user {
         try {
             let { name, email, socialType, social_login_id, registerToken, profileId, profileUrl } = req.body;
             let emailArr = email.split("@");
-            if(emailArr[1] != "illuminz.com" ){
-                return sendCustomResponse(res, getResponseMessage(responseMessageCode.UNAUTHORIZED, 'en'), BadRequest.Unauthorized)
-            }
+            // if(emailArr[1] != "illuminz.com" ){
+            //     return sendCustomResponse(res, getResponseMessage(responseMessageCode.UNAUTHORIZED, 'en'), BadRequest.Unauthorized)
+            // }
             const roles = role.user;
             const body = {};
             let result;
