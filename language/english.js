@@ -15,6 +15,7 @@ exports.responseMessages = {
     CANT_FIND_URL                                                                   : `Can't find <URL> url on the server`,
     UPLOAD_SUCCESSFUL                                                               : 'file uploaded successfully',
     SESSION_EXPIRED                                                                 : 'session expired. Please logout and login again',
-    NOT_UPDATED                                                                     : 'the item status is not updated'
+    NOT_UPDATED                                                                     : 'the item status is not updated',
+    UNAUTHORIZED                                                                    :  'You are not authorized to log in to the app'
 };  
 
