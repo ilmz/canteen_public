@@ -60,7 +60,8 @@ const permission = {
 const PAYMENT_STATUS = {
     PENDING: 'pending',
     PAID: 'paid',
-    DECLINED: 'declined'
+    DECLINED: 'declined',
+    REVERTED: 'reverted'
   };
 const PAYMENT_METHODS =  {
     CARD: 'card',
@@ -78,6 +79,10 @@ const TICKET_STATUS = {
     "INPROGRESS": 2,
     "COMPLETE"  : 3,
     "REOPEN"    : 4
+}
+const ORDER_TYPES = {
+    "PLACED"   : 1,
+    "REVERTED" : 2,
 }
 
 const MENU_ITEM_TYPES =  {
@@ -98,6 +103,10 @@ let NOTIFICATION_TYPE = {
     ORDER_PLACED: {
       title: `Order Placed`,
       body: `{userName} has placed order`
+    },
+    ORDER_REVERTED: {
+      title: `Order Reverted`,
+      body: `{userName} has Reverted Items`
     },
     AMOUNT_UPDATED: {
       title: "Amount updated",
@@ -125,4 +134,4 @@ let NOTIFICATION_TYPE = {
 
 
 module.exports =  { Success, STATUS, BadRequest, serverError, role, permission, 
-    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE, TICKET_STATUS, EMAIL_TYPE, EMAIL_TEMPLATE_URLS, type }
+    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE, TICKET_STATUS, EMAIL_TYPE, EMAIL_TEMPLATE_URLS, type, ORDER_TYPES }

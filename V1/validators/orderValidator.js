@@ -29,6 +29,28 @@ class orderValidator {
         if (value)
             next()
     }
+    static async revertItem(req, res, next) {
+
+        req.body.token = req.headers.authorization;
+        let schema = Joi.object().keys({
+            token: Joi.string().required().error(new Error("authToken is required")),
+            items: Joi.array().items(Joi.object({
+                itemId: Joi.string().required().error(new Error("itemId is required")),
+                description: Joi.string().optional(),
+                price: Joi.number().required().error(new Error("price is required")),
+                quantity: Joi.number().required().error(new Error("quantity is required"))
+
+            }))
+
+        })
+        const { value, error } = schema.validate(req.body)
+        if (error) {
+            logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
+            return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
+        }
+        if (value)
+            next()
+    }
     
     static async deleteFeedback(req, res, next) {
         req.body.token = req.headers.authorization;

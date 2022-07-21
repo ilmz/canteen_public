@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 const  User  = require('./userModel');
 const Item = require('./item')
 const category = require('./category')
-const { PAYMENT_STATUS, PAYMENT_METHODS } = require('../constants/constants')
+const { PAYMENT_STATUS, PAYMENT_METHODS, ORDER_TYPES } = require('../constants/constants')
 
 
 const orderSchema = new Schema({
@@ -45,6 +45,11 @@ const orderSchema = new Schema({
     enum: Object.values(PAYMENT_METHODS),
     default: PAYMENT_METHODS.OFFLINE
   },
+  orderType: {
+    type: Number,
+    enum: Object.values(ORDER_TYPES),
+    default: ORDER_TYPES.PLACED
+  }
   // paymentId: {
   //   type: Schema.Types.ObjectId,
   //   ref: SCHEMAS.OrderPayment

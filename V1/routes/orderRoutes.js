@@ -10,6 +10,7 @@ const authController = require('../controllers/authController')
 
 // adminRouter.route('/usersList').get(adminValidator.userList, commanFunction.authentication, adminController.userDetailsList);
 router.route('/place').post(orderValidator.createOrder, commanFunction.protect, OrderConrtoller.createOrder);
+router.route('/revertItem').post(orderValidator.revertItem, commanFunction.protect, OrderConrtoller.revertItem);
 router.route('/list').get(orderValidator.getOrder, commanFunction.protect, authController.restrictTo(1), OrderConrtoller.getOrder);
 router.route('/byId').get(orderValidator.getOrderById, commanFunction.protect, OrderConrtoller.getOrderById);
 router.route('/userOrder').get(orderValidator.getOrderHistory, commanFunction.protect, OrderConrtoller.getOrderHistory);

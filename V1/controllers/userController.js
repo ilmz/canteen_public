@@ -20,9 +20,12 @@ class user {
         try {
             let { name, email, socialType, social_login_id, registerToken, profileId, profileUrl } = req.body;
             let emailArr = email.split("@");
-            // if(emailArr[1] != "illuminz.com" ){
-            //     return sendCustomResponse(res, getResponseMessage(responseMessageCode.UNAUTHORIZED, 'en'), BadRequest.Unauthorized)
-            // }
+            //Condition for repetition of email id
+            //   let emailCheck =   await UserService.getUserByEmail(email)
+
+            if(emailArr[1] != "illuminz.com"){
+                return sendCustomResponse(res, getResponseMessage(responseMessageCode.UNAUTHORIZED, 'en'), BadRequest.Unauthorized)
+            }
             const roles = role.user;
             const body = {};
             let result;

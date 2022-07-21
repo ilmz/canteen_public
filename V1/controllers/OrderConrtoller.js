@@ -5,7 +5,7 @@ const catchAsync = require('../../utils/catchAsync');
 const {sendCustomResponse} = require('../../responses/responses')
 const { responseMessageCode }= require('../../responses/messageCodes') ;
 const { getResponseMessage }= require('../../language/multilanguageController') ;
-const { Success, BadRequest, role, serverError, PAYMENT_STATUS, NOTIFICATION_TYPE  }  = require('../../constants/constants') ;
+const { Success, BadRequest, role, serverError, PAYMENT_STATUS, NOTIFICATION_TYPE, ORDER_TYPES  }  = require('../../constants/constants') ;
 const OrderService  = require('../services/order');
 const UserService  = require('../services/user');
 const { logger } = require('../../logger/logger');
@@ -15,11 +15,61 @@ const paymentService =  require('../services/payment')
 
 
 class Order {
+    async revertItem(req, res) {
+        try {
+            let { items } =  req.body;
+            const user = req.decoded;
+            let sum = 0
+            for (let item of items) {
+                sum += (item.quantity * item.price);
+            }
+            let userAmount = await UserService.getUserAmount(user._id);
+            let todeduct = sum;
+
+            userAmount.Amount -= todeduct;
+            if(userAmount.Amount < 0){
+                userAmount.Amount = 0
+            }
+            let amountUpdated = await UserService.updateUserAmount(user._id, userAmount.Amount)
+
+            let userNotification = {
+                ...NOTIFICATION_TYPE.ORDER_REVERTED
+              };
+            let data = {
+                items   : `${items}`,
+                todeduct: `${todeduct}`
+            }
+
+            let UserOrderReverted = await OrderService.createOrder({ items, user, toPay: todeduct, payStatus: PAYMENT_STATUS.REVERTED, orderType: ORDER_TYPES.REVERTED })
+
+            let paymentHistory =  await paymentService.createPaymentHistory({user: user._id, amount: todeduct, Paid: 1, OrderId: UserOrderReverted._id})
+
+            userNotification.message = userNotification.body.replace('{userName}', user.name)
+
+            let adminDetail = await UserService.getUserByRole()
+
+            let userSession = await UserService.findOneUserSessionById(adminDetail._id)
+
+            if (userSession && UserOrderReverted) {
+                notifications(userSession.registerToken, { notification: userNotification, data: data })
+            }
+
+            // 62d8fea9a3be149945a45be7
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, 'en'), Success.OK, UserOrderReverted)
+        } catch (error) {
+            console.log("error:", error);
+            logger.error(JSON.stringify({
+                EVENT: "Error",
+                ERROR: error.toString()
+            }));
+        }
+    }
     async createOrder(req, res) {
         const language = req.headers.lan;
         try {
             const user = req.decoded;
-            console.log("user:", user);
+            // console.log("user:", user);
             const { items } = req.body
             let userAmount = 0;
             let sum = 0
@@ -31,21 +81,22 @@ class Order {
             }
             let toPay = sum
             userAmount.Amount += toPay
-            // if( userAmount.walletAmount > 0){
-            //     userAmount.Amount = userAmount.Amount - userAmount.walletAmount
-            //     if(userAmount.Amount < 0){
-            //         userAmount.Amount = 0;
-            //         userAmount.walletAmount = Math.abs(userAmount.Amount)
-            //     }else if(userAmount.Amount > 0){
-            //         userAmount.walletAmount = 0
-            //     }else if(userAmount.Amount == 0){
-            //         userAmount.walletAmount = 0
-            //     }
-            // }
+            //wallet Amount 
+            if( userAmount.walletAmount > 0){
+                userAmount.Amount = userAmount.Amount - userAmount.walletAmount
+                if(userAmount.Amount < 0){
+                    userAmount.Amount = 0;
+                    userAmount.walletAmount = Math.abs(userAmount.Amount)
+                }else if(userAmount.Amount > 0){
+                    userAmount.walletAmount = 0
+                }else if(userAmount.Amount == 0){
+                    userAmount.walletAmount = 0
+                }
+            }
            
             // console.log(" userAmount.Amount:", userAmount.Amount);
 
-            let amountUpdated = await UserService.updateUserAmount(user._id, userAmount.Amount)
+            let amountUpdated = await UserService.updateUserAmount(user._id, userAmount.Amount,  userAmount.walletAmount)
             // console.log("amountUpdated:", amountUpdated);
 
             let userNotification = {
@@ -236,6 +287,7 @@ class Order {
             }));
         }
     }
+   
     async deviceTokenTest (req, res){
 
         // const {title,  body} =  req.body;

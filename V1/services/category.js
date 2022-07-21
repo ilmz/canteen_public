@@ -6,7 +6,7 @@ class categoryService {
     updateCategory = (match, params) => categoryModel.findOneAndUpdate(match, { $set: params }, { new: true });
 
     getCategory = async (params) => {
-        const category = await categoryModel.find(params);
+        const category = await categoryModel.find(params).sort({name: 1});
         return category;
     }
     countCategory = async ({ limit, skip, isDeleted }) => {
