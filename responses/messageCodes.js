@@ -14,5 +14,7 @@ exports.responseMessageCode = {
     UPLOAD_SUCCESSFUL                                                         : 'UPLOAD_SUCCESSFUL',
     SESSION_EXPIRED                                                           : 'SESSION_EXPIRED',
     NOT_UPDATED                                                               : 'NOT_UPDATED',
-    UNAUTHORIZED                                                              : 'UNAUTHORIZED'
+    UNAUTHORIZED                                                              : 'UNAUTHORIZED',
+    LESS_QUANTITY_LEFT                                                        : 'LESS_QUANTITY_LEFT'
+
   };

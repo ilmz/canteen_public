@@ -93,9 +93,9 @@ class item {
             let offset = limit * (page - 1);
             let params = null
             let isActive = null
-            if(user.role ==0){
+            if(user.role == 0){
                 // isActive = true
-                params =   {isDeleted: false,  isActive: true}
+                params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}}
             }
             else if(user.role == 1){
                 params = {isDeleted: false}

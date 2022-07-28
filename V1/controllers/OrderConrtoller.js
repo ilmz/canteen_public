@@ -12,6 +12,7 @@ const { logger } = require('../../logger/logger');
 const { isNull, isEmpty } = require('underscore');
 const {notifications} = require('../../notifications/notification')
 const paymentService =  require('../services/payment')
+const itemService = require('../services/item')
 
 
 class Order {
@@ -21,7 +22,10 @@ class Order {
             const user = req.decoded;
             let sum = 0
             for (let item of items) {
+                itemDetails = await itemService.getItem({ _id: item.itemId })
                 sum += (item.quantity * item.price);
+                itemDetails.quantity = itemDetails.quantity + item.quantity
+                await itemService.updateItem({ _id: item.itemId }, { quantity: itemDetails.quantity })
             }
             let userAmount = await UserService.getUserAmount(user._id);
             let todeduct = sum;
@@ -72,13 +76,30 @@ class Order {
             // console.log("user:", user);
             const { items } = req.body
             let userAmount = 0;
+            let itemFilterArr = []
+            let itemQuantity = 0;
+            let itemDetails = null;
             let sum = 0
             userAmount = await UserService.getUserAmount(user._id);
             // console.log("userAmount:", userAmount);
+          
 
             for (let item of items) {
-                sum += (item.quantity * item.price);
+                
+                itemDetails = await itemService.getItem({ _id: item.itemId })
+                if (itemDetails.quantity >= item.quantity) {
+                    itemFilterArr.push(item)
+                    sum += (item.quantity * item.price);
+                    itemDetails.quantity = itemDetails.quantity - item.quantity
+                    await itemService.updateItem({ _id: item.itemId }, { quantity: itemDetails.quantity })
+                }
+                // else {
+                //     getResponseMessage(responseMessageCode.LESS_QUANTITY_LEFT, 'en').replace('{quantity}', itemDetails.quantity)
+                // }
+
             }
+            console.log("itemFilterArr:", itemFilterArr);
+           
             let toPay = sum
             userAmount.Amount += toPay
             //wallet Amount 
@@ -103,27 +124,29 @@ class Order {
                 ...NOTIFICATION_TYPE.ORDER_PLACED
               };
             let data = {
-                items: `${items}`,
+                items: `${itemFilterArr}`,
                 toPay: `${toPay}`
             }
+            if(itemFilterArr.length > 0 && toPay > 0){
+                let UserOrder = await OrderService.createOrder({ items: itemFilterArr, user, toPay, payStatus: PAYMENT_STATUS.PENDING })
 
-            let UserOrder = await OrderService.createOrder({ items, user, toPay, payStatus: PAYMENT_STATUS.PENDING })
-
-            let paymentHistory =  await paymentService.createPaymentHistory({user: user._id, amount: toPay, Paid: 0, OrderId: UserOrder._id})
-
-            userNotification.message = userNotification.body.replace('{userName}', user.name)
-
-            let adminDetail = await UserService.getUserByRole()
-
-            let userSession = await UserService.findOneUserSessionById(adminDetail._id)
-
-           let deviceToken ='cXrob3-bRN-t06HVMrFsKC:APA91bGQ__KNxqCw2nzdwyZ9k8HNPrieCUoCRBfJn3cvn7uH9t3t-jd_3cLXIUNc2ssRTAUU7M6R4Xe43_0AxI5CdWypUM0Lw3zjwh97uqiepOHsvSGvxzzh5L5lB9sZfsU5J1e-TLCt'
-            if (userSession && UserOrder) {
-                notifications(userSession.registerToken, { notification: userNotification, data: data })
+                let paymentHistory =  await paymentService.createPaymentHistory({user: user._id, amount: toPay, Paid: 0, OrderId: UserOrder._id})
+    
+                userNotification.message = userNotification.body.replace('{userName}', user.name)
+    
+                let adminDetail = await UserService.getUserByRole()
+    
+                let userSession = await UserService.findOneUserSessionById(adminDetail._id)
+    
+                if (userSession && UserOrder) {
+                    notifications(userSession.registerToken, { notification: userNotification, data: data })
+                }
+                return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, UserOrder);
+            }else{
+                return sendCustomResponse(res, getResponseMessage(responseMessageCode.LESS_QUANTITY_LEFT,  'en'), Success.OK);
             }
 
-
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, UserOrder);
+           
         } catch (error) {
             console.log("error:", error);
             logger.error(JSON.stringify({
