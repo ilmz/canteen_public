@@ -24,8 +24,9 @@ class Order {
             for (let item of items) {
                 itemDetails = await itemService.getItem({ _id: item.itemId })
                 sum += (item.quantity * item.price);
-                itemDetails.quantity = itemDetails.quantity + item.quantity
-                await itemService.updateItem({ _id: item.itemId }, { quantity: itemDetails.quantity })
+                 /** comment the item count */
+                // itemDetails.quantity = itemDetails.quantity + item.quantity
+                // await itemService.updateItem({ _id: item.itemId }, { quantity: itemDetails.quantity })
             }
             let userAmount = await UserService.getUserAmount(user._id);
             let todeduct = sum;
@@ -90,8 +91,9 @@ class Order {
                 if (itemDetails.quantity >= item.quantity) {
                     itemFilterArr.push(item)
                     sum += (item.quantity * item.price);
-                    itemDetails.quantity = itemDetails.quantity - item.quantity
-                    await itemService.updateItem({ _id: item.itemId }, { quantity: itemDetails.quantity })
+                    /** comment the item count */
+                    // itemDetails.quantity = itemDetails.quantity - item.quantity
+                    // await itemService.updateItem({ _id: item.itemId }, { quantity: itemDetails.quantity })
                 }
                 // else {
                 //     getResponseMessage(responseMessageCode.LESS_QUANTITY_LEFT, 'en').replace('{quantity}', itemDetails.quantity)
