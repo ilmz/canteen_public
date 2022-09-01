@@ -18,12 +18,17 @@ const orderSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: Item
       },
+      isRevert: {
+        type: Number,
+        default: 0
+      },
       description: String,
       price: Number,
       quantity: Number,
       
     }
   ],
+  
   total: {
     type: Number,
     default: 0

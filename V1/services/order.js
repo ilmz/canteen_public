@@ -6,8 +6,8 @@ class OrderService {
 createOrder = async ( params) => {
     return await Order.create(params);
   }
-  updateOrder = async (params) => {
-    return await Order.updateOne(match, { $set: params });
+  updateOrder = async (match, params) => {
+    return await Order.updateOne(match, { $set: params }, {new: true});
   }
   getOrder = async (params) => {
     const order = await Order.findOne(params);

@@ -18,17 +18,36 @@ const itemService = require('../services/item')
 class Order {
     async revertItem(req, res) {
         try {
-            let { items } =  req.body;
+            let { items, orderId } =  req.body;
             const user = req.decoded;
             let sum = 0
             let itemDetails = null;
+            let sameItems = [];
+            let orderDetails =  await OrderService.getOrder({_id: orderId})
+            // console.log("orderDetails:", orderDetails);
             for (let item of items) {
                 itemDetails = await itemService.getItem({ _id: item.itemId })
                 sum += (item.quantity * item.price);
+                for(let orderItem of orderDetails.items){
+                    // console.log("orderItem.itemId:", orderItem.itemId._id)
+                    // console.log("item.itemId:", item.itemId)
+                    if(item.itemId == orderItem.itemId._id.valueOf()){
+                        sameItems.push(item.itemId)
+                        item.isRevert = 1;
+                    }
+
+                }
+              
                  /** comment the item count */
                 // itemDetails.quantity = itemDetails.quantity + item.quantity
                 // await itemService.updateItem({ _id: item.itemId }, { quantity: itemDetails.quantity })
             }
+            // console.log("items details: ", items);
+            // for(let sameItem of sameItems){
+              let updatedOrder =   await OrderService.updateOrder({_id: orderId, 'items.itemId': { $in: sameItems }}, {'items.$.isRevert': 1})
+            // }
+        //    console.log("updatedOrder:", updatedOrder);
+
             let userAmount = await UserService.getUserAmount(user._id);
             let todeduct = sum;
 

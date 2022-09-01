@@ -40,7 +40,8 @@ class orderValidator {
                 price: Joi.number().required().error(new Error("price is required")),
                 quantity: Joi.number().required().error(new Error("quantity is required"))
 
-            }))
+            })),
+            orderId:  Joi.string().required().error(new Error("orderId is required"))
 
         })
         const { value, error } = schema.validate(req.body)
