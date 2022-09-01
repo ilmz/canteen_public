@@ -21,6 +21,7 @@ class Order {
             let { items } =  req.body;
             const user = req.decoded;
             let sum = 0
+            let itemDetails = null;
             for (let item of items) {
                 itemDetails = await itemService.getItem({ _id: item.itemId })
                 sum += (item.quantity * item.price);
