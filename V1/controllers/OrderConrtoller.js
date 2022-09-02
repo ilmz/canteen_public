@@ -28,15 +28,19 @@ class Order {
             for (let item of items) {
                 itemDetails = await itemService.getItem({ _id: item.itemId })
                 sum += (item.quantity * item.price);
-                for(let orderItem of orderDetails.items){
-                    // console.log("orderItem.itemId:", orderItem.itemId._id)
-                    // console.log("item.itemId:", item.itemId)
-                    if(item.itemId == orderItem.itemId._id.valueOf()){
-                        sameItems.push(item.itemId)
-                        item.isRevert = 1;
+                if(orderDetails){
+                    for(let orderItem of orderDetails.items){
+                        // console.log("orderItem.itemId:", orderItem.itemId._id)
+                        // console.log("item.itemId:", item.itemId)
+                        if(item.itemId == orderItem.itemId._id.valueOf()){
+                            sameItems.push(item.itemId)
+                            item.isRevert = 1;
+                        }
+    
                     }
 
                 }
+             
               
                  /** comment the item count */
                 // itemDetails.quantity = itemDetails.quantity + item.quantity
