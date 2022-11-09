@@ -5,7 +5,7 @@
     "title": "inventoryManagement",
     "contact": {}
   },
-  "host": "54.176.169.179:3000",
+  "host": "54.176.169.179",
   "basePath": "/api/v1",
   "schemes": ["http", "https"],
   "consumes": ["application/json"],
