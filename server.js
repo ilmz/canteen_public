@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
+require('./app');
 const mongoose = require('mongoose');
+const http     = require('http');
 
 const dotenv = require('dotenv');
 
@@ -12,7 +14,6 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-const app = require('./app');
 
 //4. start server
 //console.log(process.env);
@@ -37,10 +38,17 @@ mongoose
 const port = process.env.PORT || 3000;
 mongoose.set('debug', true)
 
-const server = app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`App is running on ${port}...`);
-});
+// const server = app.listen(port, () => {
+//   // eslint-disable-next-line no-console
+//   console.log(`App is running on ${port}...`);
+// });
+
+let serverAdd = process.env.NODE_ENV == 'development' ? 'localhost' :  process.env.NODE_SERVER_HOST;
+const server = http.createServer(app).listen(port, serverAdd, () => {
+    // eslint-disable-next-line no-console
+    console.log(`App is running on ${port}...`);
+  } )
+
 
 process.on('unhandledRejection', (err) => {
   console.log("error:", err);
