@@ -52,14 +52,7 @@ app.use(function (req, res, next) {
 app.use('/api', limiter);
 app.use("/uploads", express.static(path.join(__dirname, `uploads`)));
 
-/**swagger*/
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument, {
-  swaggerOptions: {
-    apisSorter      : 'alpha',
-    tagsSorter      : 'alpha',
-    operationsSorter: 'alpha',
-  }
-}));
+
 
 app.use((req, _, next) => {
   let log = {
@@ -78,6 +71,15 @@ app.use((req, _, next) => {
  * @desc Routes
  */
 app.use('/api/v1', v1);
+
+/**swagger*/
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument, {
+  swaggerOptions: {
+    apisSorter      : 'alpha',
+    tagsSorter      : 'alpha',
+    operationsSorter: 'alpha',
+  }
+}));
 
 /**ERROR HANDLER */
 // app.use((req, res, next) => {
