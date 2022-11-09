@@ -43,7 +43,7 @@ mongoose.set('debug', true)
 //   console.log(`App is running on ${port}...`);
 // });
 
-let serverAdd = process.env.NODE_ENV == 'development' ? 'localhost' :  process.env.NODE_SERVER_HOST;
+let serverAdd = process.env.NODE_ENV == 'development' ? 'localhost' :  process.env.NODE_HOST;
 const server = http.createServer(app).listen(port, serverAdd, () => {
     // eslint-disable-next-line no-console
     console.log(`App is running on ${port}...`);
