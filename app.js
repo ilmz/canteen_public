@@ -73,7 +73,7 @@ app.use((req, _, next) => {
 app.use('/api/v1', v1);
 
 /**swagger*/
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument, {
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument, {
   swaggerOptions: {
     apisSorter      : 'alpha',
     tagsSorter      : 'alpha',
