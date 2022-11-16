@@ -14,9 +14,16 @@ createPaymentHistory = async ( params) => {
     return Payment;
   }
   getAllPaymentHistory = async (params) => {
-    const Payment = await Payment.find(params).sort({createdAt: -1}).select('items toPay  -user');
-    // Payment.sort({createdAt: -1});
-    return Payment;
+    try {
+      const Payments = await Payment.find(params).sort({createdAt: -1}).select('Paid  amount createdAt updatedAt');
+      // Payment.sort({createdAt: -1});
+      return Payments;
+      
+    } catch (error) {
+      console.log("error:", error);
+      return error
+    }
+   
   }
   countPaymentHistory =  async ({limit, skip}) => {
     return await Payment.count().limit(limit).skip(skip)

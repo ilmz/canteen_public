@@ -51,6 +51,10 @@ const role = {
     "user"    : 0,
     "admin"   : 1,
 }
+const productStatuses = {
+    "pending"    : 0,
+    "approved"   : 1,
+}
 
 const permission = {
     "user"    : 1,
@@ -134,4 +138,4 @@ let NOTIFICATION_TYPE = {
 
 
 module.exports =  { Success, STATUS, BadRequest, serverError, role, permission, 
-    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE, TICKET_STATUS, EMAIL_TYPE, EMAIL_TEMPLATE_URLS, type, ORDER_TYPES }
+    PAGINATION_LIMIT, requestMethods, PAYMENT_STATUS, PAYMENT_METHODS, ATTACHMENTS, MENU_ITEM_TYPES, NOTIFICATION_TYPE, TICKET_STATUS, EMAIL_TYPE, EMAIL_TEMPLATE_URLS, type, ORDER_TYPES, productStatuses }

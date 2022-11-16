@@ -15,6 +15,7 @@ exports.responseMessageCode = {
     SESSION_EXPIRED                                                           : 'SESSION_EXPIRED',
     NOT_UPDATED                                                               : 'NOT_UPDATED',
     UNAUTHORIZED                                                              : 'UNAUTHORIZED',
-    LESS_QUANTITY_LEFT                                                        : 'LESS_QUANTITY_LEFT'
+    LESS_QUANTITY_LEFT                                                        : 'LESS_QUANTITY_LEFT',
+    WRONG_ORDER_ID                                                            : 'WRONG_ORDER_ID',
 
   };

@@ -674,6 +674,373 @@
         }
       }
     },
+    "/order/accountDetail": {
+      "get": {
+        "summary": "get account details",
+        "tags": [
+          "Order"
+        ],
+        "operationId": "getaccountdetails",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Cookie",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/suggested-product/create": {
+      "post": {
+        "summary": "create suggested product",
+        "tags": [
+          "suggested Product"
+        ],
+        "operationId": "createsuggestedproduct",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/createsuggestedproductrequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/order/gettransactionHistory": {
+      "get": {
+        "summary": "get Transaction history",
+        "tags": [
+          "Order"
+        ],
+        "operationId": "getTransactionhistory",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Cookie",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/order/repeatOrder": {
+      "post": {
+        "summary": "repeat Order",
+        "tags": [
+          "Order"
+        ],
+        "operationId": "repeatOrder",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "enum": [
+              "application/json"
+            ],
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Cookie",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/repeatOrderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/order/recentOrder": {
+      "get": {
+        "summary": "recent Order",
+        "tags": [
+          "Order"
+        ],
+        "operationId": "recentOrder",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/suggested-product/updateSuggestedProduct": {
+      "patch": {
+        "summary": "update suggested product",
+        "tags": [
+          "suggested Product"
+        ],
+        "operationId": "updatesuggestedproduct",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "enum": [
+              "application/json"
+            ],
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Cookie",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/updatesuggestedproductrequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/suggested-product/getSuggestedProduct": {
+      "get": {
+        "summary": "get Suggested products",
+        "tags": [
+          "suggested Product"
+        ],
+        "operationId": "getSuggestedproducts",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/suggested-product/deleteSuggestedProduct": {
+      "delete": {
+        "summary": "delete suggested product",
+        "tags": [
+          "suggested Product"
+        ],
+        "operationId": "deletesuggestedproduct",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "enum": [
+              "application/json"
+            ],
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Cookie",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/deletesuggestedproductrequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/suggested-product/getSuggestedProductById": {
+      "get": {
+        "summary": "get suggested product by id",
+        "tags": [
+          "suggested Product"
+        ],
+        "operationId": "getsuggestedproductbyid",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/suggested-product/productStatusChange": {
+      "patch": {
+        "summary": "product status change by admin",
+        "tags": [
+          "suggested Product"
+        ],
+        "operationId": "productstatuschangebyadmin",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/productstatuschangebyadminrequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
     "/order/list": {
       "get": {
         "summary": "list",
@@ -777,6 +1144,57 @@
           }
         }
       }
+    },
+    "/order/revertItem": {
+      "post": {
+        "summary": "revert Items",
+        "tags": [
+          "Order"
+        ],
+        "operationId": "revertItems",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "enum": [
+              "application/json"
+            ],
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Cookie",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/revertItemsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
     }
   },
   
@@ -806,6 +1224,143 @@
           }
         }
       }
+    },
+    "repeatOrderRequest": {
+      "title": "repeatOrderRequest",
+      "example": {
+        "orderId": "62df690b1766906a66007f98"
+      },
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "orderId"
+      ]
+    },
+    "createsuggestedproductrequest": {
+      "title": "createsuggestedproductrequest",
+      "example": {
+        "name": "kitkat",
+        "price": 10,
+        "categoryId": "628632a47a4950190d42709b",
+        "image": "62983f3bd953867435876fd4"
+      },
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "categoryId": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "price",
+        "categoryId",
+        "image"
+      ]
+    },
+    "updatesuggestedproductrequest": {
+      "title": "updatesuggestedproductrequest",
+      "example": {
+        "name": "kitkat",
+        "price": 100,
+        "categoryId": "628632a47a4950190d42709b",
+        "productId": "6374c37418abafd7c2737609"
+      },
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "categoryId": {
+          "type": "string"
+        },
+        "productId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "price",
+        "categoryId",
+        "productId"
+      ]
+    },
+    "deletesuggestedproductrequest": {
+      "title": "deletesuggestedproductrequest",
+      "example": {
+        "productId": "6374c37418abafd7c2737609"
+      },
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "productId"
+      ]
+    },
+    "productstatuschangebyadminrequest": {
+      "title": "productstatuschangebyadminrequest",
+      "example": {
+        "productId": "6374c37418abafd7c2737609",
+        "productStatus": 1
+      },
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string"
+        },
+        "productStatus": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "productId",
+        "productStatus"
+      ]
+    },
+    "revertItemsRequest": {
+      "title": "revertItemsRequest",
+      "example": {
+        "items": [
+          {
+            "itemId": "62b43b506d5f9d5df2caf99d",
+            "price": 5,
+            "quantity": 1
+          }
+        ]
+      },
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Item"
+          }
+        }
+      },
+      "required": [
+        "items"
+      ]
     }
   },
   "tags": [

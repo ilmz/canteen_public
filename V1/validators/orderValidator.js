@@ -29,6 +29,21 @@ class orderValidator {
         if (value)
             next()
     }
+    static async repeatOrder(req, res, next) {
+
+        req.body.token = req.headers.authorization;
+        let schema = Joi.object().keys({
+            token: Joi.string().required().error(new Error("authToken is required")),
+            orderId:  Joi.string().required().error(new Error("orderId is required"))
+        })
+        const { value, error } = schema.validate(req.body)
+        if (error) {
+            logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
+            return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
+        }
+        if (value)
+            next()
+    }
     static async revertItem(req, res, next) {
 
         req.body.token = req.headers.authorization;
@@ -116,6 +131,25 @@ class orderValidator {
         if (value)
             next()
     }
+    static async recentOrder(req, res, next) {
+        req.body.token      = req.headers.authorization;
+        req.body.limit      = req.query.limit;
+        req.body.page       = req.query.page;
+
+
+        let schema = Joi.object().keys({
+            token       : Joi.string().required().error(new Error("authToken is required")),
+            page        : Joi.number().optional().default(1),
+            limit       : Joi.number().optional().default(10),
+        })
+        const { value, error } = schema.validate(req.body)
+        if (error) {
+            logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
+            return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
+        }
+        if (value)
+            next()
+    }
     static async getOrderById(req, res, next) {
         req.body.token = req.headers.authorization;
         req.body.orderId = req.query.orderId;
@@ -155,6 +189,34 @@ class orderValidator {
             token           : Joi.string().required().error(new Error("authToken is required")),
             amountPaid      : Joi.number().required().error(new Error("amountPaid is required")),
             userId          : Joi.string().required().error(new Error("userId is required")),
+        })
+        const { value, error } = schema.validate(req.body)
+        if (error) {
+            logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
+            return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
+        }
+        if (value)
+            next()
+    }
+    static async gettransactionHistory(req, res, next) {
+        req.body.token = req.headers.authorization;
+
+        let schema = Joi.object().keys({
+            token           : Joi.string().required().error(new Error("authToken is required")),
+        })
+        const { value, error } = schema.validate(req.body)
+        if (error) {
+            logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
+            return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
+        }
+        if (value)
+            next()
+    }
+    static async accountDetail(req, res, next) {
+        req.body.token = req.headers.authorization;
+
+        let schema = Joi.object().keys({
+            token           : Joi.string().required().error(new Error("authToken is required")),
         })
         const { value, error } = schema.validate(req.body)
         if (error) {

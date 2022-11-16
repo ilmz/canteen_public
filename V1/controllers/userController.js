@@ -51,8 +51,8 @@ class user {
 
             }
             else if(!Exist){
-                result = await UserService.createUser({ name, email, isSocial: 1, social_type: socialType, social_login_id, role: roles, profilePic: profileId, profileUrl })
-                console.log("result:", result);
+                result = await UserService.createUser({ name, email, isSocial: 1, social_type: socialType, social_login_id, role: roles, profilePic: profileId, profileUrl, firstTimer: 1 })
+                // console.log("result:", result);
                 // await UserSessionService 
 
             }

@@ -17,6 +17,7 @@ exports.responseMessages = {
     SESSION_EXPIRED                                                                 : 'session expired. Please logout and login again',
     NOT_UPDATED                                                                     : 'the item status is not updated',
     UNAUTHORIZED                                                                    :  'You are not authorized to log in to the app',
-    LESS_QUANTITY_LEFT                                                              :  'Quantity Entered is more than the stock'
+    LESS_QUANTITY_LEFT                                                              :  'Quantity Entered is more than the stock',
+    WRONG_ORDER_ID                                                                  :  'The Order id is wrong please check it'
 };  
 

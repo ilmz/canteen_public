@@ -18,6 +18,7 @@ const itemService = require('../services/item')
 class Order {
     async revertItem(req, res) {
         try {
+            const language = req.headers.lan;
             let { items, orderId } =  req.body;
             const user = req.decoded;
             let sum = 0
@@ -86,6 +87,83 @@ class Order {
             // 62d8fea9a3be149945a45be7
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, 'en'), Success.OK, UserOrderReverted)
+        } catch (error) {
+            console.log("error:", error);
+            logger.error(JSON.stringify({
+                EVENT: "Error",
+                ERROR: error.toString()
+            }));
+        }
+    }
+    async repeatOrder(req, res) {
+        try {
+            const language = req.headers.lan;
+            const user = req.decoded;
+            // console.log("user:", user);
+            const { orderId } = req.body
+            let userAmount = 0;
+            let itemFilterArr = []
+            let sum = 0
+            let toPay = 0;
+            userAmount = await UserService.getUserAmount(user._id);
+            let orderDetails =  await OrderService.getOrder({_id: orderId})
+            if(isNull(orderDetails)){
+                return sendCustomResponse(res, getResponseMessage(responseMessageCode.WRONG_ORDER_ID,  'en'), Success.OK);
+            }
+
+            console.log("userAmount:", orderDetails);
+          
+            if(orderDetails){
+                toPay = orderDetails.toPay
+                userAmount.Amount += toPay
+
+            }
+           
+            //wallet Amount 
+            if( userAmount.walletAmount > 0){
+                userAmount.Amount = userAmount.Amount - userAmount.walletAmount
+                if(userAmount.Amount < 0){
+                    userAmount.Amount = 0;
+                    userAmount.walletAmount = Math.abs(userAmount.Amount)
+                }else if(userAmount.Amount > 0){
+                    userAmount.walletAmount = 0
+                }else if(userAmount.Amount == 0){
+                    userAmount.walletAmount = 0
+                }
+            }
+           
+            // console.log(" userAmount.Amount:", userAmount.Amount);
+
+            await UserService.updateUserAmount(user._id, userAmount.Amount,  userAmount.walletAmount)
+            // console.log("amountUpdated:", amountUpdated);
+
+            let userNotification = {
+                ...NOTIFICATION_TYPE.ORDER_PLACED
+              };
+            let data = {
+                items: `${orderDetails.items}`,
+                toPay: `${toPay}`
+            }
+            if(orderDetails.items.length > 0 && toPay > 0){
+                let UserOrder = await OrderService.createOrder({ items: orderDetails.items, user, toPay, payStatus: PAYMENT_STATUS.PENDING })
+
+                let paymentHistory =  await paymentService.createPaymentHistory({user: user._id, amount: toPay, Paid: 0, OrderId: UserOrder._id})
+    
+                userNotification.message = userNotification.body.replace('{userName}', user.name)
+    
+                let adminDetail = await UserService.getUserByRole()
+    
+                let userSession = await UserService.findOneUserSessionById(adminDetail._id)
+    
+                if (userSession && UserOrder) {
+                    notifications(userSession.registerToken, { notification: userNotification, data: data })
+                }
+                return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, UserOrder);
+            }else{
+                return sendCustomResponse(res, getResponseMessage(responseMessageCode.LESS_QUANTITY_LEFT,  'en'), Success.OK);
+            }
+
+
         } catch (error) {
             console.log("error:", error);
             logger.error(JSON.stringify({
@@ -241,6 +319,34 @@ class Order {
             }));
         }
     }
+    async recentOrder(req, res) {
+        const language = req.headers.lan;
+        const user = req.decoded;
+        try {
+            let limit = parseInt(req.query.limit) || 10;
+            let page = parseInt(req.query.page) || 1;
+            let loadMoreFlag = false;
+            let offset = limit * (page - 1);
+            let recentOrder =  await OrderService.getOrders({user: user._id })
+            let orderCount =  await OrderService.countOrder({limit, offset})
+            let pages = Math.ceil(orderCount / limit);
+            if ((pages - page) > 0) {
+                loadMoreFlag = true;
+            }
+            let Rsult = {
+                totalCounts: orderCount, totalPages: pages, loadMoreFlag: loadMoreFlag, recentOrder
+            }
+           
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Rsult)
+        } catch (error) {
+            console.log("err:", error)
+            logger.error(JSON.stringify({
+                EVENT: "Error",
+                ERROR: error.toString(),
+                ERR: error
+            }));
+        }
+    }
 
     async getOrderById(req, res) {
         const language = req.headers.lan;
@@ -261,9 +367,53 @@ class Order {
             let user =  req.decoded;
             
             let orderDetail =  await OrderService.getOrders({user: user._id})
+            let paymentHistory = await paymentService.getAllPaymentHistory({user: user._id, Paid: true, isActive: true, isDeleted: false})
+            // console.log("paymentHistory:", paymentHistory);
             let userAmount =  await UserService.getUserAmount(user._id);
             // console.log("userAmount:", userAmount);
-            let Response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, orderDetail, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
+            let Response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, orderDetail, PaidHistory: paymentHistory, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Response )
+        } catch (error) {
+            logger.error(JSON.stringify({
+                EVENT: "Error",
+                ERROR: error.toString()
+            }));
+        }
+    }
+    async gettransactionHistory(req, res) {
+        const language = req.headers.lan;
+        try {
+            let user =  req.decoded;
+            
+            let paymentHistory = await paymentService.getAllPaymentHistory({user: user._id, isActive: true, isDeleted: false})
+            // console.log("paymentHistory:", paymentHistory);
+            let userAmount =  await UserService.getUserAmount(user._id);
+            // console.log("userAmount:", userAmount);
+            let Response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, PaidHistory: paymentHistory, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Response )
+        } catch (error) {
+            logger.error(JSON.stringify({
+                EVENT: "Error",
+                ERROR: error.toString()
+            }));
+        }
+    }
+    async accountDetail(req, res) {
+        const language = req.headers.lan;
+        try {
+            let user =  req.decoded;
+            
+            let paymentHistory = await paymentService.getAllPaymentHistory({user: user._id, Paid: false, isActive: true,  isDeleted: false})
+            let totalSpend = 0;
+            for(let payment of paymentHistory){
+                totalSpend += payment.amount
+            }
+            // console.log("paymentHistory:", paymentHistory);
+            let userAmount =  await UserService.getUserAmount(user._id);
+            // console.log("userAmount:", userAmount);
+            let Response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, totalSpend, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Response )
         } catch (error) {

@@ -62,6 +62,20 @@ const userSchema = new mongoose.Schema({
     minlength: 8,
     select: false,
   },
+  firstTimer: {
+    type: Boolean,
+    default: 0
+  },
+  totalSpend:  {
+    type: Number,
+    default: 0.00,
+    validate: {
+      validator: function (val) {
+        return val >= 0;
+      },
+      message: 'total Spend should be greater than or equal to 0',
+    },
+  },
   passwordConfirm: {
     type: String,
     required: [false, 'A user must confirm password'],
