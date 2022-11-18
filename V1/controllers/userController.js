@@ -42,19 +42,22 @@ class user {
             console.log("ip:", conRemoteAddress);
 
 
-            let Exist = await UserService.getUserBySocialLogin(social_login_id);
+            let Exist = await UserService.getUserBySocialLogin(email);
+            // console.log("Exist:", Exist);
 
-            if (Exist) {
-                Exist = await UserService.updateUser(Exist._id, { name, email , profilePic: profileId, profileUrl })
-                result = Exist
-                // console.log("result:", result);
+            // if (Exist) {
+            //     Exist = await UserService.updateUser(Exist._id, { name, email , profilePic: profileId, profileUrl })
+            //     result = Exist
+            //     // console.log("result:", result);
 
-            }
-            else if(!Exist){
+            // }
+            if(!Exist){
                 result = await UserService.createUser({ name, email, isSocial: 1, social_type: socialType, social_login_id, role: roles, profilePic: profileId, profileUrl, firstTimer: 1 })
                 // console.log("result:", result);
                 // await UserSessionService 
 
+            }else{
+                result = Exist
             }
 
              // Check if any sessions exist with this registration token

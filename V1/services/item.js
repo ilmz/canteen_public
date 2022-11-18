@@ -13,7 +13,13 @@ class itemService {
         return items;
     }
     createItem = async (params) => {
-        return await item.create(params);
+        try {
+            return await item.create(params);
+            
+        } catch (error) {
+            console.log("error:", error)
+        }
+       
     }
     countItems = async ({ limit, skip, isDeleted }) => {
         return await item.count({isDeleted}).limit(limit).skip(skip)
