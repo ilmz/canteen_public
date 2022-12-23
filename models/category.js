@@ -12,6 +12,11 @@ const categorySchema = new mongoose.Schema({
         required: [true, 'A Category must hava a quantity'],
         default: 0
     },
+    image: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: Attachment,
+        default: null
+    },
     isActive: {
         type: Boolean,
         default: true

@@ -462,7 +462,7 @@ class Order {
             let userDetail = await UserService.updateUserAmountWallet(userId, walletAmount, AmountRemaining)
 
             let paymentHistory =  await paymentService.createPaymentHistory({user: userId, amount: amountPaid, Paid: 1})
-            //let updatedOrder =   await OrderService.updateOrder({'user._id': userId, 'payStatus': 'pending'}, {'payStatus': 'paid'});
+            //let updatedOrder =   await OrderService.updateOrder({'user': userId, 'payStatus': 'pending'}, {'payStatus': 'paid'});
 
             let userNotification = {
                 ...NOTIFICATION_TYPE.AMOUNT_UPDATED

@@ -28,7 +28,8 @@ class categoryValidation {
 		let schema = Joi.object().keys({
             token           :          Joi.string().required().error(new Error("authToken is required")),
             name            :          Joi.string().required().error(new Error("name is required")),
-            quantity        :          Joi.number().required().error(new Error("quantity is required")), 
+            quantity        :          Joi.number().required().error(new Error("quantity is required")),
+			image           :          Joi.string().optional().error(new Error("image is required")) 
 		})
 
 		const { value, error } = schema.validate(req.body)
@@ -45,7 +46,8 @@ class categoryValidation {
             token               :          Joi.string().required().error(new Error("authToken is required")),
             name                :          Joi.string().optional().error(new Error("name is required")),
             quantity            :          Joi.number().optional().error(new Error("quantity is required")), 
-            categoryId          :          Joi.string().required().error(new Error("categoryId is required"))
+            categoryId          :          Joi.string().required().error(new Error("categoryId is required")),
+			image           :          Joi.string().optional().error(new Error("image is required"))
 		})
 
 		const { value, error } = schema.validate(req.body)
