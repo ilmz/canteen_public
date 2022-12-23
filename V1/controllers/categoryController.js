@@ -14,8 +14,8 @@ class category {
     async createCategory(req, res) {
         const language = req.headers.lan;
         try {
-            let {name, quantity } =  req.body
-            let params = {name, quantity}
+            let {name, quantity, image } =  req.body
+            let params = {name, quantity, image}
             let category = await categoryService.createCategory(params)
           
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, category);
@@ -31,8 +31,8 @@ class category {
     async updateCategory(req, res) {
         const language = req.headers.lan;
         try {
-            let {name, quantity } =  req.body
-            let params = {name, quantity}
+            let {name, quantity, image } =  req.body
+            let params = {name, quantity,image}
 
             let category = await categoryService.updateCategory({_id: req.body.categoryId}, params)
 
