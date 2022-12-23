@@ -33,6 +33,14 @@ const categorySchema = new mongoose.Schema({
 
 );
 
+categorySchema.pre(/^find/, function (next) {
+    this.populate({
+      path: 'image',
+      select: '-__v -createdAt -updatedAt',
+    });
+    next();
+});
+
 const category = mongoose.model('category', categorySchema);
 
 module.exports = category;
