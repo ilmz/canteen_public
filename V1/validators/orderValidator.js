@@ -169,10 +169,11 @@ class orderValidator {
     }
     static async getOrderHistory(req, res, next) {
         req.body.token = req.headers.authorization;
-
+        req.body.page = req.query.page ? req.query.page : 1;
 
         let schema = Joi.object().keys({
             token: Joi.string().required().error(new Error("authToken is required")),
+            page: Joi.number().optional().default(1)
         })
         const { value, error } = schema.validate(req.body)
         if (error) {
@@ -200,9 +201,11 @@ class orderValidator {
     }
     static async gettransactionHistory(req, res, next) {
         req.body.token = req.headers.authorization;
+        req.body.page = req.query.page ? req.query.page : 1;
 
         let schema = Joi.object().keys({
             token           : Joi.string().required().error(new Error("authToken is required")),
+            page: Joi.number().optional().default(1)
         })
         const { value, error } = schema.validate(req.body)
         if (error) {

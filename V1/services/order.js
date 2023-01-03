@@ -2,7 +2,6 @@ const Order = require('../../models/order')
 
 
 class OrderService {
-
 createOrder = async ( params) => {
     return await Order.create(params);
   }

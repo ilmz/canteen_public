@@ -365,13 +365,26 @@ class Order {
         const language = req.headers.lan;
         try {
             let user =  req.decoded;
-            
-            let orderDetail =  await OrderService.getOrders({user: user._id})
+            // let orderDetail =  await OrderService.getOrders({user: user._id})
+            let limit = parseInt(req.query.limit) || 10;
+            let page = parseInt(req.query.page) || 1;
+            let loadMoreFlag = false;
+            let offset = limit * (page - 1);
+            let recentOrder =  await OrderService.getOrders({user: user._id })
+            let orderCount =  await OrderService.countOrder({limit, offset})
+            let pages = Math.ceil(orderCount / limit);
+            if ((pages - page) > 0) {
+                loadMoreFlag = true;
+            }
+            let result = {
+                totalCounts: orderCount, totalPages: pages, loadMoreFlag: loadMoreFlag, recentOrder
+            }
+
             let paymentHistory = await paymentService.getAllPaymentHistory({user: user._id, Paid: true, isActive: true, isDeleted: false})
             // console.log("paymentHistory:", paymentHistory);
             let userAmount =  await UserService.getUserAmount(user._id);
             // console.log("userAmount:", userAmount);
-            let Response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, orderDetail, PaidHistory: paymentHistory, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
+            let Response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, orderDetail: result, PaidHistory: paymentHistory, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Response )
         } catch (error) {
@@ -386,11 +399,26 @@ class Order {
         try {
             let user =  req.decoded;
             
+            
+
+            let limit = parseInt(req.query.limit) || 10;
+            let page = parseInt(req.query.page) || 1;
+            let loadMoreFlag = false;
+            let offset = limit * (page - 1);
             let paymentHistory = await paymentService.getAllPaymentHistory({user: user._id, isActive: true, isDeleted: false})
+            let historyCount =  await paymentService.countPaymentHistory({limit, offset})
+            let pages = Math.ceil(historyCount / limit);
+            if ((pages - page) > 0) {
+                loadMoreFlag = true;
+            }
+            let result = {
+                totalCounts: historyCount, totalPages: pages, loadMoreFlag: loadMoreFlag, paymentHistory
+            }
+
             // console.log("paymentHistory:", paymentHistory);
             let userAmount =  await UserService.getUserAmount(user._id);
             // console.log("userAmount:", userAmount);
-            let Response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, PaidHistory: paymentHistory, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
+            let Response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, PaidHistory: result, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Response )
         } catch (error) {
