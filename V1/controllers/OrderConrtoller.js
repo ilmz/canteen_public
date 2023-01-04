@@ -405,7 +405,7 @@ class Order {
             let page = parseInt(req.query.page) || 1;
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
-            let paymentHistory = await paymentService.getAllPaymentHistory({user: user._id, isActive: true, isDeleted: false})
+            let paymentHistory = await paymentService.getAllPaymentHistory({user: user._id, isActive: true, isDeleted: false, Paid: true, reverted: false})
             let historyCount =  await paymentService.countPaymentHistory({limit, offset})
             let pages = Math.ceil(historyCount / limit);
             if ((pages - page) > 0) {
