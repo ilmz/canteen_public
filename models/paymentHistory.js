@@ -28,6 +28,10 @@ const paymentHistorySchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    reverted: {
+        type: Boolean,
+        default: false,
+    },
     isDeleted: {
         type: Boolean,
         default: false,

@@ -72,7 +72,7 @@ class Order {
 
             let UserOrderReverted = await OrderService.createOrder({ items, user, toPay: todeduct, payStatus: PAYMENT_STATUS.REVERTED, orderType: ORDER_TYPES.REVERTED })
 
-            let paymentHistory =  await paymentService.createPaymentHistory({user: user._id, amount: todeduct, Paid: 1, OrderId: UserOrderReverted._id})
+            let paymentHistory =  await paymentService.createPaymentHistory({user: user._id, amount: todeduct, Paid: 1, OrderId: UserOrderReverted._id, reverted: 1})
 
             userNotification.message = userNotification.body.replace('{userName}', user.name)
 
