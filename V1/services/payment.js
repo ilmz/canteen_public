@@ -15,7 +15,7 @@ createPaymentHistory = async ( params) => {
   }
   getAllPaymentHistory = async (params) => {
     try {
-      const Payments = await Payment.find(params).sort({createdAt: -1}).select('Paid  amount createdAt updatedAt');
+      const Payments = await Payment.find(params).sort({createdAt: -1}).select('Paid  amount reverted createdAt updatedAt');
       // Payment.sort({createdAt: -1});
       return Payments;
       
