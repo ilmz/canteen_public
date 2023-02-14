@@ -15,7 +15,7 @@ const attachmentService = require('../services/attachment')
 
 
 class suggestedProduct {
-    
+
     async createSuggestedProduct(req, res) {
         const language = req.headers.lan;
         
@@ -35,6 +35,7 @@ class suggestedProduct {
             // await transaction.rollback();
         }
     }
+
     async   updateSuggestedProduct(req, res) {
         const language = req.headers.lan;
 
@@ -79,6 +80,7 @@ class suggestedProduct {
             }));
         }
     }
+
     async getSuggestedProduct(req, res) {
         const language = req.headers.lan;
         try {
@@ -118,7 +120,6 @@ class suggestedProduct {
         }
     }
 
-
     async getSuggestedProductById(req, res) {
         const language = req.headers.lan;
         try {
@@ -156,8 +157,5 @@ class suggestedProduct {
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.NOT_UPDATED, language || 'en'), BadRequest.INVALID, { error: error.toString() });
         }
     }
-    
-
-   
 }
 module.exports = new suggestedProduct
