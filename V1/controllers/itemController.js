@@ -143,11 +143,11 @@ class item {
             let { isActive, itemId } = req.body;
             let item =  null;
             if (isActive) {
-                 item = await itemService.updateItem({_id: itemId }, { isActive: 1})
+                 item = await itemService.updateItem({_id: itemId }, { isActive: 1, quantity: 1})
                
             }
             else {
-                item = await itemService.updateItem({_id: itemId }, { isActive: 0})
+                item = await itemService.updateItem({_id: itemId }, { isActive: 0, quantity: 0})
             }
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
         } catch (error) {

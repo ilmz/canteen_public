@@ -194,8 +194,9 @@ class Order {
                     itemFilterArr.push(item)
                     sum += (item.quantity * item.price);
                     /** comment the item count */
-                    // itemDetails.quantity = itemDetails.quantity - item.quantity
-                    // await itemService.updateItem({ _id: item.itemId }, { quantity: itemDetails.quantity })
+
+                    const updatedItemQuantity = itemDetails.quantity - item.quantity < 0 ? 0 : itemDetails.quantity - item.quantity;
+                    await itemService.updateItem({ _id: item.itemId }, { quantity: updatedItemQuantity, isActive: updatedItemQuantity ? true : false})
                 }
                 // else {
                 //     getResponseMessage(responseMessageCode.LESS_QUANTITY_LEFT, 'en').replace('{quantity}', itemDetails.quantity)
