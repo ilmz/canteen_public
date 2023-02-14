@@ -139,10 +139,14 @@ class suggestedProduct {
             const user = req.decoded;
             let { productStatus, productId } = req.body;
             let item =  null;
-            if (productStatus) {
-                 item = await suggestedProductService.updateSuggestedProduct({_id: productId }, { productStatus: productStatuses.approved})
+            if (productStatus == productStatuses.approved) {
+                item = await suggestedProductService.updateSuggestedProduct({_id: productId }, { productStatus: productStatuses.approved})
             }
-           
+            else if(productStatus == productStatuses.rejected)
+            {
+                item = await suggestedProductService.updateSuggestedProduct({_id: productId }, { productStatus: productStatuses.rejected})
+            }
+
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
         } catch (error) {
             logger.error(JSON.stringify({
