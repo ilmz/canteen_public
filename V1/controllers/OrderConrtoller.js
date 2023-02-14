@@ -34,6 +34,9 @@ class Order {
                         // console.log("orderItem.itemId:", orderItem.itemId._id)
                         // console.log("item.itemId:", item.itemId)
                         if(item.itemId == orderItem.itemId._id.valueOf()){
+                            const updatedItemQuantity = itemDetails.quantity + item.quantity;
+                            await itemService.updateItem({ _id: item.itemId }, { quantity: updatedItemQuantity, isActive: true})
+
                             sameItems.push(item.itemId)
                             item.isRevert = 1;
                         }
