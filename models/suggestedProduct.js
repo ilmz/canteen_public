@@ -38,7 +38,10 @@ const SuggestedProductSchema = new mongoose.Schema({
       default: ""
     }
   },
-  
+  reason : {
+    type: String,
+    default: ""
+  },
   isActive: {
     type: Boolean,
     default: true
