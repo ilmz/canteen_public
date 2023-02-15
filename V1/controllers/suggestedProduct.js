@@ -148,6 +148,8 @@ class suggestedProduct {
             let item =  null;
             if (productStatus == productStatuses.approved) {
                 item = await suggestedProductService.updateSuggestedProduct({_id: productId }, { productStatus: productStatuses.approved})
+
+                console.log("item", item);
             }
             else if(productStatus == productStatuses.rejected)
             {
