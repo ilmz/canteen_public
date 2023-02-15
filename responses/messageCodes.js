@@ -17,5 +17,5 @@ exports.responseMessageCode = {
     UNAUTHORIZED                                                              : 'UNAUTHORIZED',
     LESS_QUANTITY_LEFT                                                        : 'LESS_QUANTITY_LEFT',
     WRONG_ORDER_ID                                                            : 'WRONG_ORDER_ID',
-
+    CANNOT_PLACE_ORDER                                                        : 'CANNOT_PLACE_ORDER'
   };
