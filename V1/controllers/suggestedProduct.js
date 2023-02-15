@@ -18,7 +18,7 @@ class suggestedProduct {
 
     async createSuggestedProduct(req, res) {
         const language    = req.headers.lan;
-        const userDetails = req.decode;
+        const userDetails = req.decoded;
 
         console.log("userDetails", userDetails);
 
