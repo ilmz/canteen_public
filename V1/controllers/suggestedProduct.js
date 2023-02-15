@@ -20,12 +20,16 @@ class suggestedProduct {
         const language    = req.headers.lan;
         const userDetails = req.decoded;
 
-        console.log("userDetails", userDetails);
-
         try {
             const { name, price, categoryId, image } = req.body;
+            const userObj = 
+            {
+                userId : userDetails._id,
+                name   : userDetails.name,
+                email  : userDetails.email
+            }
 
-            let item = await suggestedProductService.createSuggestedProduct({ name, price, categoryId, image })
+            let item = await suggestedProductService.createSuggestedProduct({ name, price, categoryId, image, user : userObj })
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
         } catch (error) {
