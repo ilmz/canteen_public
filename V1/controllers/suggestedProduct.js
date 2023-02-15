@@ -18,25 +18,22 @@ class suggestedProduct {
 
     async createSuggestedProduct(req, res) {
         const language = req.headers.lan;
-        
+
         try {
-            const { name,  price,  categoryId, image } = req.body;
+            const { name, price, categoryId, image } = req.body;
 
-
-            let item = await suggestedProductService.createSuggestedProduct({ name,  price, categoryId, image })
+            let item = await suggestedProductService.createSuggestedProduct({ name, price, categoryId, image })
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
         } catch (error) {
-
             logger.error(JSON.stringify({
                 EVENT: "Error",
                 ERROR: error.toString()
             }));
-            // await transaction.rollback();
         }
     }
 
-    async   updateSuggestedProduct(req, res) {
+    async updateSuggestedProduct(req, res) {
         const language = req.headers.lan;
 
         try {
@@ -83,6 +80,7 @@ class suggestedProduct {
 
     async getSuggestedProduct(req, res) {
         const language = req.headers.lan;
+
         try {
             let user = req.decoded
             console.log("user", user)
@@ -92,6 +90,7 @@ class suggestedProduct {
             let offset = limit * (page - 1);
             let params = null
             let isActive = null
+
             if(user.role == 0){
                 // isActive = true
                 params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}}
@@ -104,13 +103,14 @@ class suggestedProduct {
             let allItems = await suggestedProductService.getSuggestedProducts(params)
             let itemCount =  await suggestedProductService.countSuggestedProduct({limit, offset, isDeleted: false})
             let pages = Math.ceil(itemCount / limit);
+
             if ((pages - page) > 0) {
                 loadMoreFlag = true;
             }
             let Rsult = {
                 totalCounts: itemCount, totalPages: pages, loadMoreFlag: loadMoreFlag, baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, allItems
             }
-           
+
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Rsult)
         } catch (error) {
             logger.error(JSON.stringify({
