@@ -20,6 +20,8 @@ class suggestedProduct {
         const language    = req.headers.lan;
         const userDetails = req.decode;
 
+        console.log("userDetails", userDetails);
+
         try {
             const { name, price, categoryId, image } = req.body;
 
