@@ -17,7 +17,8 @@ const attachmentService = require('../services/attachment')
 class suggestedProduct {
 
     async createSuggestedProduct(req, res) {
-        const language = req.headers.lan;
+        const language    = req.headers.lan;
+        const userDetails = req.decode;
 
         try {
             const { name, price, categoryId, image } = req.body;
