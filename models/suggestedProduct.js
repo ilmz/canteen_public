@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const validator = require('validator');
 const category =  require('./category')
-const Attachment =  require('./attachment')
+const Attachment =  require('./attachment');
+const User = require('./userModel');
 
 const SuggestedProductSchema = new mongoose.Schema({
  
@@ -22,6 +23,20 @@ const SuggestedProductSchema = new mongoose.Schema({
   productStatus: {
     type: Number,
     default: 0
+  },
+  user:{
+    userId : {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: User
+    },
+    name : {
+      type: String,
+      default: ""
+    },
+    email : {
+      type: String,
+      default: ""
+    }
   },
   
   isActive: {
