@@ -192,7 +192,7 @@ class Order {
 
             for (let item of items) {
                 
-                itemDetails = await itemService.getItem({ _id: item.itemId })
+                itemDetails = await itemService.getItem({ _id: item.itemId, isDeleted: false })
                 if (itemDetails.quantity >= item.quantity) {
                     itemFilterArr.push(item)
                     sum += (item.quantity * item.price);
