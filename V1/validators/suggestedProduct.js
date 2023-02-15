@@ -70,7 +70,7 @@ class suggestedProductValidation {
             token           :          Joi.string().required().error(new Error("authToken is required")),
             productId       :          Joi.string().required().error(new Error("itemId is required")),
             productStatus   :          Joi.number().integer().required().error(new Error("product Status is required")).valid(0, 1, 2),
-            reason          :          Joi.when("productStatus", { is: 2, then: Joi.string().trim().required(), otherwise: Joi.forbidden() })
+            // reason          :          Joi.when("productStatus", { is: 2, then: Joi.string().trim().required(), otherwise: Joi.forbidden() })
 		})
 
 		const { value, error } = schema.validate(req.body)
