@@ -145,7 +145,6 @@ class suggestedProduct {
         try {
             const user = req.decoded;
             let { productStatus, productId, reason } = req.body;
-            console.log("req -> body", item);
             let item =  null;
             if (productStatus == productStatuses.approved) {
                 item = await suggestedProductService.updateSuggestedProduct({_id: productId }, { productStatus: productStatuses.approved})
