@@ -90,7 +90,6 @@ class suggestedProduct {
 
         try {
             let user = req.decoded
-            console.log("user", user)
             let limit = parseInt(req.query.limit) || 10;
             let page = parseInt(req.query.page) || 1;
             let loadMoreFlag = false;
@@ -100,7 +99,7 @@ class suggestedProduct {
 
             if(user.role == 0){
                 // isActive = true
-                params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}}
+                params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}, "user.userId" : user._id}
             }
             else if(user.role == 1){
                 params = {isDeleted: false}
