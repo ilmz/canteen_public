@@ -63,6 +63,9 @@ class suggestedProductValidation {
 	}
     static async productStatusChange(req, res, next) {
         req.body.token = req.headers.authorization;
+
+		console.log(req.body);
+
 		let schema = Joi.object().keys({
             token           :          Joi.string().required().error(new Error("authToken is required")),
             productId       :          Joi.string().required().error(new Error("itemId is required")),
