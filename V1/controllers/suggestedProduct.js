@@ -157,8 +157,6 @@ class suggestedProduct {
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
         } catch (error) {
-
-            console.log("e4444444444444444")
             logger.error(JSON.stringify({
                 EVENT: "Error",
                 ERROR: error.toString()
