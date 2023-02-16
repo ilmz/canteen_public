@@ -25,6 +25,6 @@ router.use(authController.restrictTo(1));
 router.route(`/admin/signup`).post(authUserValidator.signUp, authController.signup);
 
 
-router.route('/delete').delete(adminValidator.deleteUser, commanFunction.protect, authController.restrictTo(1), userController.deleteUser);
+// router.route('/delete').delete(adminValidator.deleteUser, commanFunction.protect, authController.restrictTo(1), userController.deleteUser);
 
 module.exports = router;
