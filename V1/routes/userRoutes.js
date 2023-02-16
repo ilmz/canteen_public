@@ -17,14 +17,12 @@ router.route('/auth/getUser').get(authUserValidator.getUser, commanFunction.prot
 
 router.route('/admin/login').post(adminValidator.login, authController.login);
 router.route('/admin/logout').get(adminValidator.logout, commanFunction.protect, authController.logout);
+router.route('/admin/delete').delete(adminValidator.deleteUser, commanFunction.protect, authController.restrictTo(1), userController.deleteUser);
 
 router.route(`/admin/userlisting`).get(authUserValidator.userListing, commanFunction.protect, authController.restrictTo(1), userController.userListing);
 
 router.use(authController.restrictTo(1));
 
 router.route(`/admin/signup`).post(authUserValidator.signUp, authController.signup);
-
-
-router.route('/admin/delete').delete(adminValidator.deleteUser, commanFunction.protect, authController.restrictTo(1), userController.deleteUser);
 
 module.exports = router;

@@ -34,7 +34,7 @@ class adminValidator {
 			next()
 	}
     static async deleteUser(req, res, next) {
-        console.log("true false");
+        console.log("true");
         req.body.token = req.headers.authorization;
 
         let schema = Joi.object().keys({
