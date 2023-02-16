@@ -22,6 +22,7 @@ configure({
   }
 });
 exports.logger =  getLogger()
+exports.fileLogger =  getLogger('dateFile')
 
 
 // fetch logger and export

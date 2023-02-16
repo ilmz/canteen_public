@@ -8,7 +8,7 @@ const { getResponseMessage }= require('../../language/multilanguageController') 
 const { Success, BadRequest, role, serverError, PAYMENT_STATUS, NOTIFICATION_TYPE, ORDER_TYPES  }  = require('../../constants/constants') ;
 const OrderService  = require('../services/order');
 const UserService  = require('../services/user');
-const { logger } = require('../../logger/logger');
+const { logger, fileLogger } = require('../../logger/logger');
 const { isNull, isEmpty } = require('underscore');
 const {notifications} = require('../../notifications/notification')
 const paymentService =  require('../services/payment')
@@ -18,6 +18,7 @@ const itemService = require('../services/item')
 class Order {
     async revertItem(req, res) {
         try {
+            fileLogger.info(req);
             const language = req.headers.lan;
             let { items, orderId } =  req.body;
             const user = req.decoded;
