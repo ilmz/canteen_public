@@ -23,7 +23,7 @@ class item {
             let { name, description, price, quantity, categoryId, image } = req.body;
 
             name = name.split(" ").map((subStr) => {
-                return subStr[0].toUpperCase();
+                return subStr[0].toUpperCase() + subStr.slice(1, subStr.length);
             });
 
             name = name.join(" ");
