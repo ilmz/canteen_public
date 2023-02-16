@@ -194,6 +194,8 @@ class Order {
                 
                 itemDetails = await itemService.getItem({ _id: item.itemId, isDeleted: false })
 
+                console.log(itemDetails);
+
                 if(!itemDetails)
                 {
                     return sendCustomResponse(res, getResponseMessage(responseMessageCode.CANNOT_PLACE_ORDER, language || 'en'), BadRequest.NotFound, {});
