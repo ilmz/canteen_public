@@ -42,6 +42,9 @@ class adminValidator {
 		})
 
         const { value, error } = schema.validate(req.body)
+
+        console.log("true false", !!value);
+
 		if (error) {
 			logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
 			return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
