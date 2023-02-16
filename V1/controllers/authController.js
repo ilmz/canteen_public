@@ -106,6 +106,8 @@ exports.restrictTo = (...roles) => {
     // console.log("req.decoded:", req.decoded)
 
     if(req.decoded){
+      console.log("role", req.decoded.role);
+      console.log("roleDecode", req.decoded);
       req.body.role = req.decoded.role
     }
     if (!roles.includes(req.body.role)) {
