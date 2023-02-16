@@ -95,7 +95,7 @@ class item {
             let isActive = null
             if(user.role == 0){
                 // isActive = true
-                params =   {isDeleted: false,  isActive: false, quantity: {$ne: 0}}
+                params =   {isDeleted: false, quantity: {$ne: 0}}
             }
             else if(user.role == 1){
                 params = {isDeleted: false}
