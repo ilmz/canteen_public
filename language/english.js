@@ -1,7 +1,7 @@
 
 
 exports.responseMessages = {
-    NOT_ALLOWED                                                                     : "You are not allowed to perform this action ",
+    NOT_ALLOWED                                                                     : "You are not allowed to perform this action oop",
     EMAIL_EXIST                                                                     : "This email ID is already registered. Please try with different email",
     EMAIL_PASSWORD_REQUIRED                                                         : "Please provide email and password",
     EMAIL_OR_PASSWORD_WROGN                                                         : "email or password is wrong",
