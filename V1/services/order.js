@@ -13,7 +13,7 @@ createOrder = async ( params) => {
     return order;
   }
   getOrders = async (params) => {
-    const order = await Order.find(params).sort({createdAt: -1}).select('items toPay createdAt -user payStatus orderType');
+    const order = await Order.find(params).sort({createdAt: -1}).limit(10).select('items toPay createdAt -user payStatus orderType');
     // order.sort({createdAt: -1});
     return order;
   }
