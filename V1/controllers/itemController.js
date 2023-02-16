@@ -20,7 +20,13 @@ class item {
         const language = req.headers.lan;
         
         try {
-            const { name, description, price, quantity, categoryId, image } = req.body;
+            let { name, description, price, quantity, categoryId, image } = req.body;
+
+            name = name.split(" ").map((subStr) => {
+                return subStr[0].toUpperCase();
+            });
+
+            name = name.join(" ");
 
             let params =  { name, description, price, quantity, categoryId, image}
 
