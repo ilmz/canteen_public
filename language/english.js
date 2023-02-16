@@ -18,6 +18,8 @@ exports.responseMessages = {
     NOT_UPDATED                                                                     : 'the item status is not updated',
     UNAUTHORIZED                                                                    :  'You are not authorized to log in to the app',
     LESS_QUANTITY_LEFT                                                              :  'Quantity Entered is more than the stock',
-    WRONG_ORDER_ID                                                                  :  'The Order id is wrong please check it'
+    WRONG_ORDER_ID                                                                  :  'The Order id is wrong please check it',
+    CANNOT_PLACE_ORDER                                                              : 'This item is out of stock. Please order other item',
+    USER_NOT_FOUNDR                                                                 : 'User not found'
 };  
 
