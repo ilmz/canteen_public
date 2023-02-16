@@ -18,7 +18,7 @@ class suggestedProductService {
     countSuggestedProduct = async ({ limit, skip, isDeleted }) => {
         return await suggestedProduct.count({isDeleted}).limit(limit).skip(skip)
     }
-   
+    deleteSuggestedProduct = (userId) => suggestedProduct.updateMany({"user.userId" : userId}, { $set: {isDeleted : true}}, {new: true});
 }
 
 module.exports = new suggestedProductService();
