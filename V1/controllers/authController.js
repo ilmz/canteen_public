@@ -103,7 +103,7 @@ exports.restrictTo = (...roles) => {
   
   return (req, res, next) => {
     const language = req.headers.lan;
-    // console.log("req.decoded:", req.decoded)
+    console.log("req.decoded:", req.decoded)
 
     if(req.decoded){
       console.log("role", req.decoded.role);
