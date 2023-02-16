@@ -43,7 +43,7 @@ class adminValidator {
 
         const { value, error } = schema.validate(req.body)
 
-        console.log("true false", !!value);
+        console.log("true false");
 
 		if (error) {
 			logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
