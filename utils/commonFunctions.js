@@ -131,11 +131,13 @@ class commanFunction {
         //2. Verification token
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-        // console.log("decoded:", decoded);
+        console.log("decoded:", decoded);
 
           //3. check if user stil exist
         
           const currentUser = await User.findById(decoded.user._id).lean(true);
+
+          console.log("currentUser====", currentUser);
           if (!currentUser) {
               return sendCustomResponse(res, getResponseMessage(responseMessageCode.USER_DOES_NOT_EXIST, language || 'en'), BadRequest.Unauthorized)
           }
