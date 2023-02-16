@@ -21,7 +21,7 @@ router.route('/admin/delete').delete(adminValidator.deleteUser, commanFunction.p
 
 router.route(`/admin/userlisting`).get(authUserValidator.userListing, commanFunction.protect, authController.restrictTo(1), userController.userListing);
 
-// router.use(authController.restrictTo(1));
+router.use(authController.restrictTo(1));
 
 router.route(`/admin/signup`).post(authUserValidator.signUp, authController.signup);
 
