@@ -111,6 +111,7 @@ exports.restrictTo = (...roles) => {
       req.body.role = req.decoded.role
     }
     if (!roles.includes(req.body.role)) {
+      console.log("23456789oiuytdsxcvhji876543efg");
       return sendCustomResponse(res, getResponseMessage(responseMessageCode.NOT_ALLOWED, language || 'en'), BadRequest.Unauthorized);
       // next(new AppError('you are not authorised to perform this action', 403));
     }
