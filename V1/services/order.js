@@ -49,7 +49,7 @@ createOrder = async ( params) => {
       },
       {
         $project: {
-          _id : "$documentId._id",
+          _id : "$documentId",
           items : 1, 
           toPay : 1, 
           createdAt : 1,
