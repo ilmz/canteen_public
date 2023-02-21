@@ -18,7 +18,11 @@ createOrder = async ( params) => {
     return order;
   }
   getLimitedorders = async (limit, params) => {
-    const order = await Order.find(params).sort({createdAt: -1}).limit(limit).select('items toPay createdAt -user payStatus orderType');
+    const order = await Order.find(params).sort({createdAt: -1}).limit(limit).select('items toPay createdAt -user payStatus orderType').aggregate([{
+      "$group" : {
+        "_id": "items._id"
+      }
+    }]);
     // order.sort({createdAt: -1});
     return order;
   }
