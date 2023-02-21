@@ -48,6 +48,7 @@ createOrder = async ( params) => {
       },
       {
         $project: {
+          _id : 0,
           items : 1, 
           toPay : 1, 
           createdAt : 1,
