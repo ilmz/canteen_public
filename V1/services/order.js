@@ -43,7 +43,6 @@ createOrder = async ( params) => {
       },
       {
         $project: {
-          user : 0,
           items : 1, 
           toPay : 1, 
           createdAt : 1,
