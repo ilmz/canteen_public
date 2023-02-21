@@ -89,7 +89,10 @@ class suggestedProduct {
         const language = req.headers.lan;
 
         try {
-            let user = req.decoded
+            let user = req.decoded;
+
+            console.log(req.query);
+
             let limit = parseInt(req.query.limit) || 10;
             let page = parseInt(req.query.page) || 1;
             let type = [parseInt(req.query.type)] || [productStatuses.approved, productStatuses.rejected];
