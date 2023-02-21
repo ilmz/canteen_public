@@ -106,7 +106,7 @@ class suggestedProduct {
                 // isActive = 0 || 1
             }
             // console.log("isActive:", isActive);
-            let allItems = await suggestedProductService.getSuggestedProducts(params)
+            let allItems = await suggestedProductService.getLimitedSuggestedProducts(offset, limit, params)
             let itemCount =  await suggestedProductService.countSuggestedProduct({limit, offset, isDeleted: false})
             let pages = Math.ceil(itemCount / limit);
 

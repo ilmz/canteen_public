@@ -8,6 +8,10 @@ class suggestedProductService {
         const items = await suggestedProduct.find(params).sort('name');
         return items;
     }
+    getLimitedSuggestedProducts = async (offset, limit, params) => {
+        const items = await suggestedProduct.find(params).sort({'createdAt' : -1}).skip(offset).limit(limit);
+        return items;
+    }
     getSuggestedProduct = async (params) => {
         const items = await suggestedProduct.findOne(params);
         return items;
