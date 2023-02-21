@@ -9,11 +9,13 @@ class suggestedProductValidation {
         req.body.token = req.headers.authorization;
         req.body.limit      = req.query.limit;
         req.body.page       = req.query.page;
+        req.body.type       = req.query.type;
 
 		let schema = Joi.object().keys({
             token: Joi.string().required().error(new Error("authToken is required")),
             page: Joi.number().optional().default(1),
             limit: Joi.number().optional().default(10),
+            type: Joi.number().optional().default(0),
 		})
 
 		const { value, error } = schema.validate(req.body)
