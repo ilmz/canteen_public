@@ -340,7 +340,7 @@ class Order {
             let page = parseInt(req.query.page) || 1;
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
-            let recentOrder =  await OrderService.getOrders({user: user._id,  orderType: ORDER_TYPES.PLACED})
+            let recentOrder =  await OrderService.getLimitedorders(limit, {user: user._id,  orderType: ORDER_TYPES.PLACED})
             let orderCount =  await OrderService.countOrder({limit, offset})
             let pages = Math.ceil(orderCount / limit);
             if ((pages - page) > 0) {
