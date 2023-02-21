@@ -93,6 +93,7 @@ class suggestedProduct {
             let limit = parseInt(req.query.limit) || 10;
             let page = parseInt(req.query.page) || 1;
             let type = [parseInt(req.query.type)] || [productStatuses.approved, productStatuses.rejected];
+            console.log(type);
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
             let params = null
