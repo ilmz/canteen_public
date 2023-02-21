@@ -92,6 +92,7 @@ class suggestedProduct {
             let user = req.decoded
             let limit = parseInt(req.query.limit) || 10;
             let page = parseInt(req.query.page) || 1;
+            let type = [parseInt(req.query.type)] || [productStatuses.approved, productStatuses.rejected];
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
             let params = null
@@ -99,7 +100,7 @@ class suggestedProduct {
 
             if(user.role == 0){
                 // isActive = true
-                params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}, "user.userId" : user._id}
+                params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}, "user.userId" : user._id, productStatus : {$in: type}}
             }
             else if(user.role == 1){
                 params = {isDeleted: false}
