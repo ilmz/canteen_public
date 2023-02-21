@@ -101,10 +101,10 @@ class suggestedProduct {
 
             if(user.role == 0){
                 // isActive = true
-                params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}, "user.userId" : user._id, productStatus : {$in: type}}
+                params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}, "user.userId" : user._id}
             }
             else if(user.role == 1){
-                params = {isDeleted: false}
+                params = {isDeleted: false, productStatus : {$in: type}}
                 // isActive = 0 || 1
             }
             // console.log("isActive:", isActive);
