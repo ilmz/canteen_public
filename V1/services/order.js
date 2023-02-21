@@ -32,7 +32,12 @@ createOrder = async ( params) => {
       },
       {
         $group : {
-          _id: "$items._id",
+          _id       : "$items._id",
+          items     : {$first : "$items"},
+          toPay     : {$first : "$toPay"},
+          createdAt : {$first : "$createdAt"},
+          payStatus : {$first : "$payStatus"},
+          orderType : {$first : "$orderType"},
         }
       },
       {
@@ -51,6 +56,7 @@ createOrder = async ( params) => {
         }
       }
     ])
+
     return order;
   }
   countOrder =  async ({limit, skip}) => {
