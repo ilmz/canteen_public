@@ -91,12 +91,9 @@ class suggestedProduct {
         try {
             let user = req.decoded;
 
-            console.log(req.query);
-
             let limit = parseInt(req.query.limit) || 10;
             let page = parseInt(req.query.page) || 1;
-            let type = parseInt(req.query.type) !== undefined ? [parseInt(req.query.type)] : [productStatuses.approved, productStatuses.rejected];
-            console.log(type);
+            let type = parseInt(req.query.type) >= 0 ? [parseInt(req.query.type)] : [productStatuses.approved, productStatuses.rejected];
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
             let params = null
