@@ -1,8 +1,10 @@
 
-const Joi  =  require('joi');
-const {sendCustomResponse} = require('../../responses/responses')
+const Joi                      = require('joi');
+const JoiDate                  = require('@joi/date');
+const extendedJoi              = Joi.extend(JoiDate);
+const {sendCustomResponse}     = require('../../responses/responses')
 const { Success, BadRequest }  = require('../../constants/constants') ;
-const {logger} =  require('../../logger/logger')
+const {logger}                 = require('../../logger/logger')
 
 
 
@@ -223,10 +225,10 @@ class orderValidator {
         req.body.from  = req.query.from || from;
         req.body.to    = req.query.to   || to;
 
-        let schema = Joi.object().keys({
-            token : Joi.string().required().error(new Error("authToken is required")),
-            from  : Joi.date().format('YYYY-MM-DD').optional().default(from),
-            to    : Joi.date().format('YYYY-MM-DD').optional().default(to)
+        let schema = extendedJoi.object().keys({
+            token : extendedJoi.string().required().error(new Error("authToken is required")),
+            from  : extendedJoi.date().format('YYYY-MM-DD').optional().default(from),
+            to    : extendedJoi.date().format('YYYY-MM-DD').optional().default(to)
         });
 
         const { value, error } = schema.validate(req.body)
