@@ -18,6 +18,7 @@ router.route('/byId').get(orderValidator.getOrderById, commanFunction.protect, O
 router.route('/userOrder').get(orderValidator.getOrderHistory, commanFunction.protect, OrderConrtoller.getOrderHistory);
 router.route('/amountCalculations').patch(orderValidator.amountCalculations, commanFunction.protect, authController.restrictTo(1), OrderConrtoller.amountCalculations);
 router.route('/gettransactionHistory').get(orderValidator.gettransactionHistory, commanFunction.protect,  OrderConrtoller.gettransactionHistory);
+router.route('/getMonthlyOrderAmount').get(orderValidator.getMonthlyOrderAmount, commanFunction.protect,  OrderConrtoller.getMonthlyOrderAmount);
 router.route('/accountDetail').get(orderValidator.accountDetail, commanFunction.protect,  OrderConrtoller.accountDetail);
 router.route('/deviceTokenTest').get(OrderConrtoller.deviceTokenTest);
 // router.route('/getitem').get(itemController.getitem);

@@ -215,6 +215,29 @@ class orderValidator {
         if (value)
             next()
     }
+    static async getMonthlyOrderAmount(req, res, next) {
+        const from = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString().split("T")[0];
+        const to   = new Date().toISOString().split("T")[0];
+
+        req.body.token = req.headers.authorization;
+        req.body.from  = req.query.from || from;
+        req.body.to    = req.query.to   || to;
+
+        let schema = Joi.object().keys({
+            token : Joi.string().required().error(new Error("authToken is required")),
+            from  : Joi.date().format('YYYY-MM-DD').optional().default(from),
+            to    : Joi.date().format('YYYY-MM-DD').optional().default(to)
+        });
+
+        const { value, error } = schema.validate(req.body)
+
+        if (error) {
+            logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
+            return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
+        }
+        if (value)
+            next()
+    }
     static async accountDetail(req, res, next) {
         req.body.token = req.headers.authorization;
 

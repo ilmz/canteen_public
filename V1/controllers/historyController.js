@@ -95,6 +95,7 @@ class feedback {
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SHOW_ERROR_MESSAGE, language || 'en'), serverError.Internal_Server_error, { error: error.toString() });
         }
     }
+
     async feedbackStatusChange(req, res) {
         const language = req.headers.lan;
         try {
@@ -126,6 +127,7 @@ class feedback {
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SHOW_ERROR_MESSAGE, language || 'en'), serverError.Internal_Server_error, { error: error.toString() });
         }
     }
+
     async feedbackActionChange(req, res) {
         const language = req.headers.lan;
         try {
@@ -156,6 +158,7 @@ class feedback {
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SHOW_ERROR_MESSAGE, language || 'en'), serverError.Internal_Server_error, { error: error.toString() });
         }
     }
+
     async getFeedback(req, res) {
         const language = req.headers.lan;
         try {
