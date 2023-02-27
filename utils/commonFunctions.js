@@ -114,6 +114,8 @@ class commanFunction {
         const { language } = req.headers;
         //1. getting token and check if it's there
         let token;
+
+        console.log("req.cookies", req.cookies);
       
         if (
           req.headers.authorization &&

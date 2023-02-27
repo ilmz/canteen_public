@@ -325,7 +325,7 @@ class Order {
             let Rsult = {
                 totalCounts: orderCount, totalPages: pages, loadMoreFlag: loadMoreFlag, orderSummary
             }
-           
+
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Rsult)
         } catch (error) {
             console.log("err:", error)
