@@ -414,7 +414,6 @@ class Order {
         const language = req.headers.lan;
 
         try {
-            console.log("FROM TO");
             let user         = req.decoded;
             let limit        = parseInt(req.query.limit) || 10;
             let page         = parseInt(req.query.page)  || 1;
@@ -424,7 +423,6 @@ class Order {
             let to           = req.body.to;
             let params       = {createdAt : {$gte : from, $lt : to}};
 
-            console.log({params});
             let recentOrder  = await OrderService.getOrders({user: user._id, ...params })
             let orderCount   = await OrderService.countOrder({limit, offset})
             let pages        = Math.ceil(orderCount / limit);
