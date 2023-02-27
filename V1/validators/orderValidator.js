@@ -176,7 +176,7 @@ class orderValidator {
         req.body.token = req.headers.authorization;
         req.body.page  = req.query.page ? req.query.page : 1;
         req.query.from ? req.body.from  = req.query.from  : req.body.from  = from
-        req.query.to   ? req.body.to    = req.query.to    : req.body.from  = to
+        req.query.to   ? req.body.to    = req.query.to    : req.body.to  = to
 
         let schema = extendedJoi.object().keys({
             token : extendedJoi.string().required().error(new Error("authToken is required")),
@@ -184,6 +184,9 @@ class orderValidator {
             from  : extendedJoi.date().format('YYYY-MM-DD').optional(),
             to    : extendedJoi.date().format('YYYY-MM-DD').optional()
         })
+
+        console.log(req.body);
+
         const { value, error } = schema.validate(req.body)
         if (error) {
             logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
