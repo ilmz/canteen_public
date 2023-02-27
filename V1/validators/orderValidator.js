@@ -189,6 +189,7 @@ class orderValidator {
 
         const { value, error } = schema.validate(req.body)
         if (error) {
+            console.log("ERROR OF JOI", error);
             logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
             return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
         }
