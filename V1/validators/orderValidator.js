@@ -171,11 +171,15 @@ class orderValidator {
     }
     static async getOrderHistory(req, res, next) {
         req.body.token = req.headers.authorization;
-        req.body.page = req.query.page ? req.query.page : 1;
+        req.body.page  = req.query.page ? req.query.page : 1;
+        req.query.from ? req.body.from  = req.query.from  : false
+        req.query.to   ? req.body.to    = req.query.to    : false
 
-        let schema = Joi.object().keys({
-            token: Joi.string().required().error(new Error("authToken is required")),
-            page: Joi.number().optional().default(1)
+        let schema = extendedJoi.object().keys({
+            token : extendedJoi.string().required().error(new Error("authToken is required")),
+            page  : extendedJoi.number().optional().default(1),
+            from  : extendedJoi.date().format('YYYY-MM-DD').optional(),
+            to    : extendedJoi.date().format('YYYY-MM-DD').optional()
         })
         const { value, error } = schema.validate(req.body)
         if (error) {

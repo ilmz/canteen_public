@@ -419,7 +419,9 @@ class Order {
             let page         = parseInt(req.query.page)  || 1;
             let loadMoreFlag = false;
             let offset       = limit * (page - 1);
-            let recentOrder  = await OrderService.getOrders({user: user._id })
+            let params       = {};
+            req.query.from && req.query.to ? params = {createdAt : {$gte:ISODATE(req.query.from), $lt:ISODATE(req.query.to)}} : params = {};
+            let recentOrder  = await OrderService.getOrders({user: user._id, ...params })
             let orderCount   = await OrderService.countOrder({limit, offset})
             let pages        = Math.ceil(orderCount / limit);
 
