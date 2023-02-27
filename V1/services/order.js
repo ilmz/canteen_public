@@ -92,13 +92,14 @@ class OrderService {
           }, 
           'totalAmount': {
             '$sum': '$toPay'
-          }
+          },
+          "year": {"$first" : {"$year" : "$createdAt"}}
         }
       }, {
         '$project': {
           '_id': 0, 
           'monthId'     : '$_id.month', 
-          'year'        : { $year: "$_id" },
+          'year'        : '$year',
           'totalAmount' : '$totalAmount'
         }
       }
