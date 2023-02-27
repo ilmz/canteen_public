@@ -158,6 +158,7 @@ class commanFunction {
         //   console.log("currentUser:", currentUser);
           req.decoded = currentUser;
       
+          console.log("Calling Next");
         next();
       });
 }
