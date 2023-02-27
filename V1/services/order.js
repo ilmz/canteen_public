@@ -97,8 +97,9 @@ class OrderService {
       }, {
         '$project': {
           '_id': 0, 
-          'monthName': '$_id.month', 
-          'totalAmount': '$totalAmount'
+          'monthId'     : '$_id.month', 
+          'year'        : '$_id.year',
+          'totalAmount' : '$totalAmount'
         }
       }
     ])
