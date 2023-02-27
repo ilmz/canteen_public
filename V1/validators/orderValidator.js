@@ -175,7 +175,7 @@ class orderValidator {
         req.query.from ? req.body.from  = req.query.from  : false
         req.query.to   ? req.body.to    = req.query.to    : false
 
-        console.log(req.query);
+        console.log(req.body);
 
         let schema = extendedJoi.object().keys({
             token : extendedJoi.string().required().error(new Error("authToken is required")),
