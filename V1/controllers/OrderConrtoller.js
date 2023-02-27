@@ -414,15 +414,15 @@ class Order {
         const language = req.headers.lan;
 
         try {
+            console.log("FROM TO");
             let user         = req.decoded;
             let limit        = parseInt(req.query.limit) || 10;
             let page         = parseInt(req.query.page)  || 1;
             let loadMoreFlag = false;
             let offset       = limit * (page - 1);
-            let params       = {};
-            let from         = new Date(req.query.from).toISOString();
-            let to           = new Date(req.query.to).toISOString();
-            req.query.from && req.query.to ? params = {createdAt : {$gte : from, $lt : to}} : params = {};
+            let from         = req.body.from;
+            let to           = req.body.to;
+            let params       = {createdAt : {$gte : from, $lt : to}};
 
             console.log({params});
             let recentOrder  = await OrderService.getOrders({user: user._id, ...params })
