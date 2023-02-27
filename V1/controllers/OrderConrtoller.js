@@ -420,7 +420,9 @@ class Order {
             let loadMoreFlag = false;
             let offset       = limit * (page - 1);
             let params       = {};
-            req.query.from && req.query.to ? params = {createdAt : {$gte:new Date(req.query.from).toISOString(), $lt:new Date(req.query.to).toISOString()}} : params = {};
+            let from         = new Date(req.query.from).toISOString();
+            let to           = new Date(req.query.to).toISOString();
+            req.query.from && req.query.to ? params = {createdAt : {$gte : from, $lt : to}} : params = {};
             let recentOrder  = await OrderService.getOrders({user: user._id, ...params })
             let orderCount   = await OrderService.countOrder({limit, offset})
             let pages        = Math.ceil(orderCount / limit);
