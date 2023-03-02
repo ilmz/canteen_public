@@ -78,8 +78,8 @@ class OrderService {
             '$gt': 0
           }, 
           'createdAt': {
-            '$gte': new Date(from), 
-            '$lt': new Date(to)
+            '$gte': new Date(new Date(from).setUTCHours(0, 0, 0, 0)), 
+            '$lt': new Date(new Date(to).setUTCHours(23, 59, 59, 999))
           }, 
           'user': userId,
           'items.isRevert' : 0

@@ -347,8 +347,6 @@ class Order {
             let offset = limit * (page - 1);
             let recentOrder =  await OrderService.getLimitedorders(limit, {user: user._id,  orderType: ORDER_TYPES.PLACED, 'items.isRevert' : 0})
 
-            console.log("recentOrders", recentOrder);
-
             let orderCount =  await OrderService.countOrder({limit, offset})
             let pages = Math.ceil(orderCount / limit);
             if ((pages - page) > 0) {
