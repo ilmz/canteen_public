@@ -68,7 +68,7 @@ class Order {
 
             let userNotification = {
                 ...NOTIFICATION_TYPE.ORDER_REVERTED
-              };
+            };
             let data = {
                 items   : `${items}`,
                 todeduct: `${todeduct}`
@@ -345,7 +345,7 @@ class Order {
             let page = parseInt(req.query.page) || 1;
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
-            let recentOrder =  await OrderService.getLimitedorders(limit, {user: user._id,  orderType: ORDER_TYPES.PLACED})
+            let recentOrder =  await OrderService.getLimitedorders(limit, {user: user._id,  orderType: ORDER_TYPES.PLACED, 'items.isRevert' : 0})
 
             console.log("recentOrders", recentOrder);
 
@@ -423,9 +423,7 @@ class Order {
             let to           = req.body.to;
             let params       = {createdAt : {$gte : from, $lt : to}};
 
-            console.log("params", params)
             let recentOrder  = await OrderService.getOrders({user: user._id, ...params })
-            console.log("recentOrder", recentOrder);
             let orderCount   = await OrderService.countOrder({limit, offset})
             let pages        = Math.ceil(orderCount / limit);
 

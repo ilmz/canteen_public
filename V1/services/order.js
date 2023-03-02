@@ -102,6 +102,10 @@ class OrderService {
           'year'        : '$year',
           'totalAmount' : '$totalAmount'
         }
+      }, {
+        '$sort' : {
+          'monthId' : -1
+        }
       }
     ])
   }
