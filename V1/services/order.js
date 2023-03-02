@@ -81,7 +81,8 @@ class OrderService {
             '$gte': new Date(from), 
             '$lt': new Date(to)
           }, 
-          'user': userId
+          'user': userId,
+          'items.isRevert' : 0
         }
       }, {
         '$group': {
