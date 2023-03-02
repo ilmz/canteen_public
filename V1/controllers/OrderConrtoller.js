@@ -419,7 +419,7 @@ class Order {
             let offset       = limit * (page - 1);
             let from         = req.body.from;
             let to           = req.body.to;
-            let params       = {createdAt : {$gte : from, $lt : to}};
+            let params       = {createdAt : {$gte : from, $lt : new Date(new Date(to).setUTCHours(23, 59, 59, 999))}};
 
             let recentOrder  = await OrderService.getOrders({user: user._id, ...params })
             let orderCount   = await OrderService.countOrder({limit, offset})
