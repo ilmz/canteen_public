@@ -1,8 +1,10 @@
 
-const Joi  =  require('joi');
-const {sendCustomResponse} = require('../../responses/responses')
+const Joi                      = require('joi');
+const JoiDate                  = require('@joi/date');
+const extendedJoi              = Joi.extend(JoiDate);
+const {sendCustomResponse}     = require('../../responses/responses')
 const { Success, BadRequest }  = require('../../constants/constants') ;
-const {logger} =  require('../../logger/logger')
+const {logger}                 = require('../../logger/logger')
 
 
 
@@ -168,15 +170,26 @@ class orderValidator {
             next()
     }
     static async getOrderHistory(req, res, next) {
-        req.body.token = req.headers.authorization;
-        req.body.page = req.query.page ? req.query.page : 1;
+        const from = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString().split("T")[0];
+        const to   = new Date().toISOString().split("T")[0];
 
-        let schema = Joi.object().keys({
-            token: Joi.string().required().error(new Error("authToken is required")),
-            page: Joi.number().optional().default(1)
+        req.body.token = req.headers.authorization;
+        req.body.page  = req.query.page ? req.query.page : 1;
+        req.body.from  = req.query.from || from
+        req.body.to    = req.query.to   || to
+
+        let schema = extendedJoi.object().keys({
+            token : extendedJoi.string().required().error(new Error("authToken is required")),
+            page  : extendedJoi.number().optional().default(1),
+            from  : extendedJoi.date().format('YYYY-MM-DD').optional(),
+            to    : extendedJoi.date().format('YYYY-MM-DD').optional()
         })
+
+        console.log(req.body);
+
         const { value, error } = schema.validate(req.body)
         if (error) {
+            console.log("ERROR OF JOI", error);
             logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
             return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
         }
@@ -204,10 +217,33 @@ class orderValidator {
         req.body.page = req.query.page ? req.query.page : 1;
 
         let schema = Joi.object().keys({
-            token           : Joi.string().required().error(new Error("authToken is required")),
-            page: Joi.number().optional().default(1)
+            token : Joi.string().required().error(new Error("authToken is required")),
+            page  : Joi.number().optional().default(1)
         })
         const { value, error } = schema.validate(req.body)
+        if (error) {
+            logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
+            return sendCustomResponse(res, error.message, BadRequest.INVALID, {})
+        }
+        if (value)
+            next()
+    }
+    static async getMonthlyOrderAmount(req, res, next) {
+        const from = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString().split("T")[0];
+        const to   = new Date().toISOString().split("T")[0];
+
+        req.body.token = req.headers.authorization;
+        req.body.from  = req.query.from || from;
+        req.body.to    = req.query.to   || to;
+
+        let schema = extendedJoi.object().keys({
+            token : extendedJoi.string().required().error(new Error("authToken is required")),
+            from  : extendedJoi.date().format('YYYY-MM-DD').optional().default(from),
+            to    : extendedJoi.date().format('YYYY-MM-DD').optional().default(to)
+        });
+
+        const { value, error } = schema.validate(req.body)
+
         if (error) {
             logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
             return sendCustomResponse(res, error.message, BadRequest.INVALID, {})

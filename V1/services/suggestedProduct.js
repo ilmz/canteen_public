@@ -8,6 +8,10 @@ class suggestedProductService {
         const items = await suggestedProduct.find(params).sort('name');
         return items;
     }
+    getLimitedSuggestedProducts = async (offset, limit, params) => {
+        const items = await suggestedProduct.find(params).sort({'updatedAt' : -1}).skip(offset).limit(limit);
+        return items;
+    }
     getSuggestedProduct = async (params) => {
         const items = await suggestedProduct.findOne(params);
         return items;
@@ -15,10 +19,10 @@ class suggestedProductService {
     createSuggestedProduct = async (params) => {
         return await suggestedProduct.create(params);
     }
-    countSuggestedProduct = async ({ limit, skip, isDeleted }) => {
-        return await suggestedProduct.count({isDeleted}).limit(limit).skip(skip)
+    countSuggestedProduct = async (params) => {
+        return await suggestedProduct.count(params)
     }
-   
+    deleteSuggestedProduct = (userId) => suggestedProduct.updateMany({"user.userId" : userId}, { $set: {isDeleted : true}}, {new: true});
 }
 
 module.exports = new suggestedProductService();

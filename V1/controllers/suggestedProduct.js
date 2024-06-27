@@ -15,27 +15,32 @@ const attachmentService = require('../services/attachment')
 
 
 class suggestedProduct {
-    
+
     async createSuggestedProduct(req, res) {
-        const language = req.headers.lan;
-        
+        const language    = req.headers.lan;
+        const userDetails = req.decoded;
+
         try {
-            const { name,  price,  categoryId, image } = req.body;
+            const { name, price, categoryId, image } = req.body;
+            const userObj = 
+            {
+                userId : userDetails._id,
+                name   : userDetails.name,
+                email  : userDetails.email
+            }
 
-
-            let item = await suggestedProductService.createSuggestedProduct({ name,  price, categoryId, image })
+            let item = await suggestedProductService.createSuggestedProduct({ name, price, categoryId, image, user : userObj })
 
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
         } catch (error) {
-
             logger.error(JSON.stringify({
                 EVENT: "Error",
                 ERROR: error.toString()
             }));
-            // await transaction.rollback();
         }
     }
-    async   updateSuggestedProduct(req, res) {
+
+    async updateSuggestedProduct(req, res) {
         const language = req.headers.lan;
 
         try {
@@ -79,36 +84,41 @@ class suggestedProduct {
             }));
         }
     }
+
     async getSuggestedProduct(req, res) {
         const language = req.headers.lan;
+
         try {
-            let user = req.decoded
-            console.log("user", user)
+            let user = req.decoded;
+
             let limit = parseInt(req.query.limit) || 10;
             let page = parseInt(req.query.page) || 1;
+            let type = parseInt(req.query.type) >= 0 ? [parseInt(req.query.type)] : [productStatuses.approved, productStatuses.rejected];
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
             let params = null
             let isActive = null
+
             if(user.role == 0){
                 // isActive = true
-                params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}}
+                params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}, "user.userId" : user._id}
             }
             else if(user.role == 1){
-                params = {isDeleted: false}
+                params = {isDeleted: false, productStatus : {$in: type}}
                 // isActive = 0 || 1
             }
             // console.log("isActive:", isActive);
-            let allItems = await suggestedProductService.getSuggestedProducts(params)
-            let itemCount =  await suggestedProductService.countSuggestedProduct({limit, offset, isDeleted: false})
+            let allItems = await suggestedProductService.getLimitedSuggestedProducts(offset, limit, params)
+            let itemCount =  await suggestedProductService.countSuggestedProduct(params)
             let pages = Math.ceil(itemCount / limit);
+
             if ((pages - page) > 0) {
                 loadMoreFlag = true;
             }
             let Rsult = {
                 totalCounts: itemCount, totalPages: pages, loadMoreFlag: loadMoreFlag, baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, allItems
             }
-           
+
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Rsult)
         } catch (error) {
             logger.error(JSON.stringify({
@@ -117,7 +127,6 @@ class suggestedProduct {
             }));
         }
     }
-
 
     async getSuggestedProductById(req, res) {
         const language = req.headers.lan;
@@ -137,12 +146,16 @@ class suggestedProduct {
         const language = req.headers.lan;
         try {
             const user = req.decoded;
-            let { productStatus, productId } = req.body;
+            let { productStatus, productId, reason } = req.body;
             let item =  null;
-            if (productStatus) {
-                 item = await suggestedProductService.updateSuggestedProduct({_id: productId }, { productStatus: productStatuses.approved})
+            if (productStatus == productStatuses.approved) {
+                item = await suggestedProductService.updateSuggestedProduct({_id: productId }, { productStatus: productStatuses.approved})
             }
-           
+            else if(productStatus == productStatuses.rejected)
+            {
+                item = await suggestedProductService.updateSuggestedProduct({_id: productId }, { productStatus: productStatuses.rejected, reason : reason})
+            }
+
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
         } catch (error) {
             logger.error(JSON.stringify({
@@ -152,8 +165,5 @@ class suggestedProduct {
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.NOT_UPDATED, language || 'en'), BadRequest.INVALID, { error: error.toString() });
         }
     }
-    
-
-   
 }
 module.exports = new suggestedProduct

@@ -67,6 +67,7 @@ class userAuthValidation {
 		})
 
 		const { value, error } = schema.validate(req.body)
+
 		if (error) {
 			logger.error(JSON.stringify({ EVENT: "JOI EROOR", Error: error }));
 			return sendCustomResponse(res, error.message, BadRequest.INVALID, {})

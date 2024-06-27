@@ -8,7 +8,7 @@ const { getResponseMessage }= require('../../language/multilanguageController') 
 const { Success, BadRequest, role, serverError, PAYMENT_STATUS, NOTIFICATION_TYPE, ORDER_TYPES  }  = require('../../constants/constants') ;
 const OrderService  = require('../services/order');
 const UserService  = require('../services/user');
-const { logger } = require('../../logger/logger');
+const { logger, fileLogger } = require('../../logger/logger');
 const { isNull, isEmpty } = require('underscore');
 const {notifications} = require('../../notifications/notification')
 const paymentService =  require('../services/payment')
@@ -18,6 +18,7 @@ const itemService = require('../services/item')
 class Order {
     async revertItem(req, res) {
         try {
+            fileLogger.info(req);
             const language = req.headers.lan;
             let { items, orderId } =  req.body;
             const user = req.decoded;
@@ -34,6 +35,9 @@ class Order {
                         // console.log("orderItem.itemId:", orderItem.itemId._id)
                         // console.log("item.itemId:", item.itemId)
                         if(item.itemId == orderItem.itemId._id.valueOf()){
+                            const updatedItemQuantity = itemDetails.quantity + item.quantity;
+                            await itemService.updateItem({ _id: item.itemId }, { quantity: updatedItemQuantity, isActive: true})
+
                             sameItems.push(item.itemId)
                             item.isRevert = 1;
                         }
@@ -64,7 +68,7 @@ class Order {
 
             let userNotification = {
                 ...NOTIFICATION_TYPE.ORDER_REVERTED
-              };
+            };
             let data = {
                 items   : `${items}`,
                 todeduct: `${todeduct}`
@@ -95,6 +99,7 @@ class Order {
             }));
         }
     }
+
     async repeatOrder(req, res) {
         try {
             const language = req.headers.lan;
@@ -172,6 +177,7 @@ class Order {
             }));
         }
     }
+
     async createOrder(req, res) {
         const language = req.headers.lan;
         try {
@@ -189,13 +195,22 @@ class Order {
 
             for (let item of items) {
                 
-                itemDetails = await itemService.getItem({ _id: item.itemId })
+                itemDetails = await itemService.getItem({ _id: item.itemId, isDeleted: false, isActive: true })
+
+                console.log(itemDetails);
+
+                if(!itemDetails)
+                {
+                    return sendCustomResponse(res, getResponseMessage(responseMessageCode.CANNOT_PLACE_ORDER, language || 'en'), BadRequest.NotFound, {});
+                }
+
                 if (itemDetails.quantity >= item.quantity) {
                     itemFilterArr.push(item)
                     sum += (item.quantity * item.price);
                     /** comment the item count */
-                    // itemDetails.quantity = itemDetails.quantity - item.quantity
-                    // await itemService.updateItem({ _id: item.itemId }, { quantity: itemDetails.quantity })
+
+                    const updatedItemQuantity = itemDetails.quantity - item.quantity < 0 ? 0 : itemDetails.quantity - item.quantity;
+                    await itemService.updateItem({ _id: item.itemId }, { quantity: updatedItemQuantity, isActive: updatedItemQuantity ? true : false})
                 }
                 // else {
                 //     getResponseMessage(responseMessageCode.LESS_QUANTITY_LEFT, 'en').replace('{quantity}', itemDetails.quantity)
@@ -260,6 +275,7 @@ class Order {
             // await transaction.rollback();
         }
     }
+
     async updateeOrder(req, res) {
         const language = req.headers.lan;
         // const transaction = await sequalize.transaction();
@@ -292,6 +308,7 @@ class Order {
             }));
         }
     }
+
     async getOrder(req, res) {
         const language = req.headers.lan;
         try {
@@ -308,7 +325,7 @@ class Order {
             let Rsult = {
                 totalCounts: orderCount, totalPages: pages, loadMoreFlag: loadMoreFlag, orderSummary
             }
-           
+
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Rsult)
         } catch (error) {
             console.log("err:", error)
@@ -319,6 +336,7 @@ class Order {
             }));
         }
     }
+
     async recentOrder(req, res) {
         const language = req.headers.lan;
         const user = req.decoded;
@@ -327,7 +345,8 @@ class Order {
             let page = parseInt(req.query.page) || 1;
             let loadMoreFlag = false;
             let offset = limit * (page - 1);
-            let recentOrder =  await OrderService.getOrders({user: user._id })
+            let recentOrder =  await OrderService.getLimitedorders(limit, {user: user._id,  orderType: ORDER_TYPES.PLACED, 'items.isRevert' : 0})
+
             let orderCount =  await OrderService.countOrder({limit, offset})
             let pages = Math.ceil(orderCount / limit);
             if ((pages - page) > 0) {
@@ -361,39 +380,76 @@ class Order {
             }));
         }
     }
-    async getOrderHistory(req, res) {
+
+    async getMonthlyOrderAmount(req, res) {
         const language = req.headers.lan;
+
         try {
-            let user =  req.decoded;
-            // let orderDetail =  await OrderService.getOrders({user: user._id})
-            let limit = parseInt(req.query.limit) || 10;
-            let page = parseInt(req.query.page) || 1;
-            let loadMoreFlag = false;
-            let offset = limit * (page - 1);
-            let recentOrder =  await OrderService.getOrders({user: user._id })
-            let orderCount =  await OrderService.countOrder({limit, offset})
-            let pages = Math.ceil(orderCount / limit);
-            if ((pages - page) > 0) {
-                loadMoreFlag = true;
-            }
-            let result = {
-                totalCounts: orderCount, totalPages: pages, loadMoreFlag: loadMoreFlag, recentOrder
+            const user   = req.decoded;
+            const userId = user._id;
+            const {from, to} = req.body;
+
+            if(from > to)
+            {
+                throw new Error("From Date can't be larger than To Date");
             }
 
-            let paymentHistory = await paymentService.getAllPaymentHistory({user: user._id, Paid: true, isActive: true, isDeleted: false})
-            // console.log("paymentHistory:", paymentHistory);
-            let userAmount =  await UserService.getUserAmount(user._id);
-            // console.log("userAmount:", userAmount);
-            let Response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, orderDetail: result, PaidHistory: paymentHistory, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
+            const totalAmountOrders  = await OrderService.getTotalAmountForDateRange(from, to, userId);
 
-            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Response )
-        } catch (error) {
+            const response = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, orderDetail: totalAmountOrders }
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, response)
+        }
+        catch (error) {
             logger.error(JSON.stringify({
                 EVENT: "Error",
                 ERROR: error.toString()
             }));
         }
     }
+
+    async getOrderHistory(req, res) {
+        const language = req.headers.lan;
+
+        try {
+            let user         = req.decoded;
+            let limit        = parseInt(req.query.limit) || 10;
+            let page         = parseInt(req.query.page)  || 1;
+            let loadMoreFlag = false;
+            let offset       = limit * (page - 1);
+            let from         = req.body.from;
+            let to           = req.body.to;
+            let params       = {createdAt : {$gte : from, $lt : new Date(new Date(to).setUTCHours(23, 59, 59, 999))}};
+
+            let recentOrder  = await OrderService.getOrders({user: user._id, ...params })
+            let orderCount   = await OrderService.countOrder({limit, offset})
+            let pages        = Math.ceil(orderCount / limit);
+
+            if ((pages - page) > 0) {
+                loadMoreFlag = true;
+            }
+
+            let result = {
+                totalCounts  : orderCount, 
+                totalPages   : pages,
+                loadMoreFlag : loadMoreFlag,
+                recentOrder
+            }
+
+            let paymentHistory = await paymentService.getAllPaymentHistory({user: user._id, Paid: true, isActive: true, isDeleted: false})
+            let userAmount     = await UserService.getUserAmount(user._id);
+            let Response       = { baseUrl: `http://${process.env.NODE_SERVER_HOST}:3000`, orderDetail: result, PaidHistory: paymentHistory, Amount: userAmount.Amount, walletAmount: userAmount.walletAmount}
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, Response )
+        }
+        catch (error) {
+            logger.error(JSON.stringify({
+                EVENT : "Error",
+                ERROR : error.toString()
+            }));
+        }
+    }
+
     async gettransactionHistory(req, res) {
         const language = req.headers.lan;
         try {
@@ -428,6 +484,7 @@ class Order {
             }));
         }
     }
+
     async accountDetail(req, res) {
         const language = req.headers.lan;
         try {
@@ -451,6 +508,7 @@ class Order {
             }));
         }
     }
+
     async amountCalculations(req, res) {
         const language = req.headers.lan;
         try {
@@ -515,7 +573,7 @@ class Order {
             }));
         }
     }
-   
+
     async deviceTokenTest (req, res){
 
         // const {title,  body} =  req.body;

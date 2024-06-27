@@ -93,7 +93,7 @@ app.use((err, _, res, next) => {
     message : err.message || 'Internal Server Error',
     data    : {},
   }
-  res.status(err.status).json(response);
+  res.status(err.status || 500).json(response);
   logger.error(JSON.stringify({ EVENT: "FINAL RESPONSE", ERROR: response }));
 })
 app.all('*', (req, res, next) => {

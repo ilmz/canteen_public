@@ -48,6 +48,10 @@ class UserService {
   updateUsersession = (expiredSessionIds) => UserSession.updateMany({ _id: { $in: expiredSessionIds } }, {
     $set: { isDeleted: true }
   })
+  deleteUsersession = (userId) => UserSession.updateMany({ user: { $eq: userId } }, {
+    $set: { isDeleted: true }
+  })
+  deleteUser = (userId, params) => User.findOneAndUpdate({_id: userId}, { $set: params })
   // await UserSessionModel.updateMany({ _id: { $in: expiredSessionIds } }, {
   //   $set: { logoutTime: new Date() }
   // });

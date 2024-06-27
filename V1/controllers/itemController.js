@@ -20,7 +20,13 @@ class item {
         const language = req.headers.lan;
         
         try {
-            const { name, description, price, quantity, categoryId, image } = req.body;
+            let { name, description, price, quantity, categoryId, image } = req.body;
+
+            name = name.split(" ").map((subStr) => {
+                return subStr[0].toUpperCase() + subStr.slice(1, subStr.length);
+            });
+
+            name = name.join(" ");
 
             let params =  { name, description, price, quantity, categoryId, image}
 
@@ -95,7 +101,7 @@ class item {
             let isActive = null
             if(user.role == 0){
                 // isActive = true
-                params =   {isDeleted: false,  isActive: true, quantity: {$ne: 0}}
+                params =   {isDeleted: false}
             }
             else if(user.role == 1){
                 params = {isDeleted: false}
@@ -143,11 +149,11 @@ class item {
             let { isActive, itemId } = req.body;
             let item =  null;
             if (isActive) {
-                 item = await itemService.updateItem({_id: itemId }, { isActive: 1})
+                 item = await itemService.updateItem({_id: itemId }, { isActive: 1, quantity: 1})
                
             }
             else {
-                item = await itemService.updateItem({_id: itemId }, { isActive: 0})
+                item = await itemService.updateItem({_id: itemId }, { isActive: 0, quantity: 0})
             }
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, item);
         } catch (error) {

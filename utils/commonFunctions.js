@@ -114,6 +114,8 @@ class commanFunction {
         const { language } = req.headers;
         //1. getting token and check if it's there
         let token;
+
+        console.log("req.cookies", req.cookies);
       
         if (
           req.headers.authorization &&
@@ -131,11 +133,11 @@ class commanFunction {
         //2. Verification token
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-        // console.log("decoded:", decoded);
-
           //3. check if user stil exist
         
           const currentUser = await User.findById(decoded.user._id).lean(true);
+
+          console.log("currentUser====", currentUser);
           if (!currentUser) {
               return sendCustomResponse(res, getResponseMessage(responseMessageCode.USER_DOES_NOT_EXIST, language || 'en'), BadRequest.Unauthorized)
           }
@@ -156,6 +158,7 @@ class commanFunction {
         //   console.log("currentUser:", currentUser);
           req.decoded = currentUser;
       
+          console.log("Calling Next");
         next();
       });
 }

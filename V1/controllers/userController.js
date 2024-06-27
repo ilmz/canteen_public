@@ -11,7 +11,6 @@ const { Success, BadRequest, role, serverError  }  = require('../../constants/co
 const UserService  = require('../services/user');
 const { logger } = require('../../logger/logger');
 const { isNull } = require('underscore');
-const paymentService =  require('../services/payment')
 
 class user {
     
@@ -91,8 +90,33 @@ class user {
             // const {userId} =  req.query;
             let user = req.decoded
             let User = await UserService.getUserById(user._id)
-           
+
             return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, User)
+        } catch (error) {
+            logger.error(JSON.stringify({
+                EVENT: "Error",
+                ERROR: error.toString()
+            }));
+        }
+    }
+
+    async deleteUser(req, res) {
+        const language = req.headers.lan;
+
+        try {
+            const userId = req.body.userId;
+
+            const isUserExits = await UserService.getUserById(userId);
+
+            if(!isUserExits)
+            {
+                return sendCustomResponse(res, getResponseMessage(responseMessageCode.USER_NOT_FOUND, language || 'en'), BadRequest.INVALID, {});
+            }
+
+            await UserService.deleteUser(userId, { isDeleted : true })
+            await UserService.deleteUsersession(userId, { isDeleted : true })
+
+            return sendCustomResponse(res, getResponseMessage(responseMessageCode.SUCCESS, language || 'en'), Success.OK, {})
         } catch (error) {
             logger.error(JSON.stringify({
                 EVENT: "Error",

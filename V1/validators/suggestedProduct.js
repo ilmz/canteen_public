@@ -9,11 +9,13 @@ class suggestedProductValidation {
         req.body.token = req.headers.authorization;
         req.body.limit      = req.query.limit;
         req.body.page       = req.query.page;
+        req.body.type       = req.query.type;
 
 		let schema = Joi.object().keys({
             token: Joi.string().required().error(new Error("authToken is required")),
             page: Joi.number().optional().default(1),
             limit: Joi.number().optional().default(10),
+            type: Joi.number().optional().default(0),
 		})
 
 		const { value, error } = schema.validate(req.body)
@@ -63,10 +65,15 @@ class suggestedProductValidation {
 	}
     static async productStatusChange(req, res, next) {
         req.body.token = req.headers.authorization;
+
+		console.log(req.body);
+
 		let schema = Joi.object().keys({
             token           :          Joi.string().required().error(new Error("authToken is required")),
             productId       :          Joi.string().required().error(new Error("itemId is required")),
-            productStatus   :          Joi.boolean().required().error(new Error("product Status is required")).valid(0, 1)
+            productStatus   :          Joi.number().integer().required().error(new Error("product Status is required")).valid(1, 2),
+            reason          :          Joi.when("productStatus", { is: 2, then: Joi.string().trim().required(), otherwise: Joi.forbidden() })
+            // reason          :          Joi.forbidden()
 		})
 
 		const { value, error } = schema.validate(req.body)

@@ -1,7 +1,7 @@
 
 
 exports.responseMessages = {
-    NOT_ALLOWED                                                                     : "You are not allowed to perform this action ",
+    NOT_ALLOWED                                                                     : "You are not allowed to perform this action oop",
     EMAIL_EXIST                                                                     : "This email ID is already registered. Please try with different email",
     EMAIL_PASSWORD_REQUIRED                                                         : "Please provide email and password",
     EMAIL_OR_PASSWORD_WROGN                                                         : "email or password is wrong",
@@ -18,6 +18,8 @@ exports.responseMessages = {
     NOT_UPDATED                                                                     : 'the item status is not updated',
     UNAUTHORIZED                                                                    :  'You are not authorized to log in to the app',
     LESS_QUANTITY_LEFT                                                              :  'Quantity Entered is more than the stock',
-    WRONG_ORDER_ID                                                                  :  'The Order id is wrong please check it'
+    WRONG_ORDER_ID                                                                  :  'The Order id is wrong please check it',
+    CANNOT_PLACE_ORDER                                                              : 'This item is out of stock. Please order other item',
+    USER_NOT_FOUNDR                                                                 : 'User not found'
 };  
 
